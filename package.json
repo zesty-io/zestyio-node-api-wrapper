@@ -1,6 +1,6 @@
 {
   "name": "zestyio-node-api-wrapper",
-  "main": "./zestyio-note-api-wrapper",
+  "main": "./zestyio-node-api-wrapper.js",
   "version": "0.0.1",
   "description": "Node API Wrapper for Zesty.io Instance and Accounts API.",
   "keywords": [
