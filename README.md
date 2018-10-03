@@ -34,7 +34,7 @@ Getting views returns JSON array of view object
 
 ```
 try {
-	let res = await zestyioRequests.getViews()''
+	let res = await zestyioRequests.getViews();
 } catch(err) {
 	console.log(err);
 }
