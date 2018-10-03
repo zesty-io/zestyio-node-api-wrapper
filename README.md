@@ -18,7 +18,7 @@ Include this line at the top of your file
 
 ```
 let token = "PRIVATE_TOKEN_FROM_ZESTYIO"; // this should be loaded from an env file
-let instanceZUID = "8-b0a6c2b192-xkgt38"; // The ZUID of the Zesty.io Cloud Content Instance on which to make requests
+let instanceZUID = "8-b0a6c2b192-xkgt38"; // ZUID of the Zesty.io Cloud Content Instance on which to make requests
 
 const zestyioRequests = new ZestyioAPIRequests(instanceZUID, token);
 
