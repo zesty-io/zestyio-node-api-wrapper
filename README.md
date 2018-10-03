@@ -15,7 +15,7 @@ npm install --save git+https://github.com/zesty-io/zestyio-node-api-wrapper.git
 Include this line at the top of your file
 
 ```
-const ZestyioAPIRequests = require('zestyio-node-api-wrapper');
+const ZestyioAPIRequests = require('zestyio-api-wrapper');
 ```
 
 ### Instantiating
