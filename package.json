@@ -1,0 +1,20 @@
+{
+  "name": "zestyio-node-api-wrapper",
+  "main": "./zestyio-note-api-wrapper",
+  "version": "0.0.1",
+  "description": "Node API Wrapper for Zesty.io Instance and Accounts API.",
+  "keywords": [
+    "zesty.io",
+    "headless",
+    "cms",
+    "parsley",
+		"api",
+		"wrapper",
+		"node"
+  ],
+  "repository": "https://github.com/zesty-io/zestyio-node-api-wrapper",
+  "license": "GNU",
+  "dependencies": {
+    "request": "^2.73.0"
+  }
+}
