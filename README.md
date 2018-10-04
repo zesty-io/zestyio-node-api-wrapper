@@ -62,7 +62,7 @@ Creating a view (endpoint)
 
 ```
 let fileName = "/special-endpoint.json";
-let content = "{"foo":"bar"}";
+let content = JSON.stringify({"foo":"bar"});
 let payload = {"code": content,"type":"ajax-json", "fileName": fileName};
 try {
 	let res = await zestyioRequests.createView(payload);
@@ -72,14 +72,56 @@ try {
 
 ```
 
-Saving a view, return a JSON object
+Saving a view, returns a JSON object
 
 ```
-let fileZUID = "11-dbe794-wx5ppr";
+let viewZUID = "11-dbe794-wx5ppr";
 let content = "my view content";
 let payload = {"code": content};
 try {
-	let res = await zestyioRequests.saveView(fileZUID, payload);
+	let res = await zestyioRequests.saveView(viewZUID, payload);
+} catch (err){
+	console.log(err);
+}
+
+```
+
+### Scripts
+CRUD on Zesty.io script files. See documentation here:
+https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833
+
+Getting scripts returns JSON array of view object
+
+```
+try {
+	let res = await zestyioRequests.getScripts();
+} catch(err) {
+	console.log(err);
+}
+```
+
+Creating a script
+
+```
+let fileName = "my-script.js";
+let content = "alert('hello world');";
+let payload = {"code": content, "fileName": fileName};
+try {
+	let res = await zestyioRequests.createScript(payload);
+} catch (err){
+	console.log(err);
+}
+
+```
+
+Saving a script, return a JSON object
+
+```
+let scriptZUID = "10-3568a8-79ml1q";
+let content = "my script content";
+let payload = {"code": content};
+try {
+	let res = await zestyioRequests.saveScript(scriptZUID, payload);
 } catch (err){
 	console.log(err);
 }
