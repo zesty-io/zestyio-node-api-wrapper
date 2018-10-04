@@ -48,8 +48,8 @@ Creating a view (snippet)
 
 ```
 let fileName = "navigation-snippet";
-let content = "my view content";
-let payload = {"code": content, "fileName": fileName};
+let code = "my view content";
+let payload = {"code": code, "fileName": fileName};
 try {
 	let res = await zestyioRequests.createView(payload);
 } catch (err){
@@ -62,8 +62,8 @@ Creating a view (endpoint)
 
 ```
 let fileName = "/special-endpoint.json";
-let content = JSON.stringify({"foo":"bar"});
-let payload = {"code": content,"type":"ajax-json", "fileName": fileName};
+let code = JSON.stringify({"foo":"bar"});
+let payload = {"code": code,"type":"ajax-json", "fileName": fileName};
 try {
 	let res = await zestyioRequests.createView(payload);
 } catch (err){
@@ -76,8 +76,8 @@ Saving a view, returns a JSON object
 
 ```
 let viewZUID = "11-dbe794-wx5ppr";
-let content = "my view content";
-let payload = {"code": content};
+let code = "my view content";
+let payload = {"code": code};
 try {
 	let res = await zestyioRequests.saveView(viewZUID, payload);
 } catch (err){
@@ -104,8 +104,8 @@ Creating a script
 
 ```
 let fileName = "my-script.js";
-let content = "alert('hello world');";
-let payload = {"code": content, "fileName": fileName};
+let code = "alert('hello world');";
+let payload = {"code": code, "fileName": fileName};
 try {
 	let res = await zestyioRequests.createScript(payload);
 } catch (err){
@@ -118,8 +118,8 @@ Saving a script, return a JSON object
 
 ```
 let scriptZUID = "10-3568a8-79ml1q";
-let content = "my script content";
-let payload = {"code": content};
+let code = "my script content";
+let payload = {"code": code};
 try {
 	let res = await zestyioRequests.saveScript(scriptZUID, payload);
 } catch (err){
