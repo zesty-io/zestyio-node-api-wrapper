@@ -44,14 +44,28 @@ try {
 }
 ```
 
-Creating a view
+Creating a view (snippet)
 
 ```
 let fileName = "navigation-snippet";
 let content = "my view content";
-let payload = {"code": content};
+let payload = {"code": content, "fileName": fileName};
 try {
-	let res = await zestyioRequests.createView(fileName, payload);
+	let res = await zestyioRequests.createView(payload);
+} catch (err){
+	console.log(err);
+}
+
+```
+
+Creating a view (endpoint)
+
+```
+let fileName = "/special-endpoint.json";
+let content = "{"foo":"bar"}";
+let payload = {"code": content,"type":"ajax-json", "fileName": fileName};
+try {
+	let res = await zestyioRequests.createView(payload);
 } catch (err){
 	console.log(err);
 }
