@@ -75,7 +75,7 @@ export default class ZestyioAPIWrapper {
 		return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsGETAll));
 	}
 
-	async putView(viewZUID, payload){
+	async saveView(viewZUID, payload){
 		let viewPutURL = this.replaceInURL(
 			this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
 			{'VIEW_ZUID': viewZUID}
@@ -83,7 +83,7 @@ export default class ZestyioAPIWrapper {
 		return await this.putRequest(viewPutURL, payload);
 	}
 
-	async postView(payload){
+	async createView(payload){
 		return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsPOST), payload);
 	}
 
@@ -91,7 +91,7 @@ export default class ZestyioAPIWrapper {
 		return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll));
 	}
 
-	async putScript(scriptZUID, payload){
+	async saveScript(scriptZUID, payload){
 		let scriptPutURL = this.replaceInURL(
 			this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUT),
 			{'SCRIPT_ZUID': scriptZUID}
@@ -99,7 +99,7 @@ export default class ZestyioAPIWrapper {
 		return await this.putRequest(scriptPutURL, payload);
 	}
 
-	async postScript(payload){
+	async createScript(payload){
 		return await this.putRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST), payload);
 	}
 
@@ -107,7 +107,7 @@ export default class ZestyioAPIWrapper {
 		return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETAll));
 	}
 
-	async putStylesheet(stylesheetZUID, payload){
+	async saveStylesheet(stylesheetZUID, payload){
 		let stylesheetPutURL = this.replaceInURL(
 			this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUT),
 			{'STYLESHEET_ZUID': stylesheetZUID}
@@ -115,7 +115,7 @@ export default class ZestyioAPIWrapper {
 		return await this.putRequest(stylesheetPutURL, payload);
 	}
 
-	async postStylesheet(payload){
+	async createStylesheet(payload){
 		return await this.putRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST), payload);
 	}
 

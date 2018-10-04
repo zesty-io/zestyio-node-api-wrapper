@@ -51,7 +51,7 @@ let fileName = "navigation-snippet";
 let content = "my view content";
 let payload = {"code": content};
 try {
-	let res = await zestyioRequests.postView(fileName, payload);
+	let res = await zestyioRequests.createView(fileName, payload);
 } catch (err){
 	console.log(err);
 }
@@ -65,7 +65,7 @@ let fileZUID = "11-dbe794-wx5ppr";
 let content = "my view content";
 let payload = {"code": content};
 try {
-	let res = await zestyioRequests.putView(fileZUID, payload);
+	let res = await zestyioRequests.saveView(fileZUID, payload);
 } catch (err){
 	console.log(err);
 }
