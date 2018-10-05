@@ -6,7 +6,10 @@ export default class ZestyioAPIWrapper {
 	instancesAPIURL = "https://INSTANCE_ZUID.api.zesty.io/v1";
 	instancesAPIEndpoints = {
 		"modelsGETAll" 			: "/content/models",
-		"itemsGET" 					: "/content/models/MODEL_ZUID/items",
+		"itemsGETAll" 			: "/content/models/MODEL_ZUID/items",
+		"itemsPOST"	 				: "/content/models/MODEL_ZUID/items",
+		"itemsGET"	 				: "/content/models/MODEL_ZUID/items/ITEM_ZUID",
+		"itemsPUT"	 				: "/content/models/MODEL_ZUID/items/ITEM_ZUID",
 		"viewsGETAll" 			: "/web/views",
 		"viewsGET" 					: "/web/views/VIEW_ZUID",
 		"viewsPOST" 				: "/web/views",
