@@ -103,7 +103,7 @@ export default class ZestyioAPIWrapper {
 	}
 
 	async createScript(payload){
-		return await this.putRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST), payload);
+		return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST), payload);
 	}
 
 	async getStylesheets(){
@@ -119,7 +119,7 @@ export default class ZestyioAPIWrapper {
 	}
 
 	async createStylesheet(payload){
-		return await this.putRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST), payload);
+		return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST), payload);
 	}
 
 	async getInstance(){
