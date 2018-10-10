@@ -88,7 +88,7 @@ try {
 
 ### Scripts
 CRUD on Zesty.io script files. See documentation here:
-https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833
+https://instances-api.zesty.org/#83f109ba-94a8-4647-8cb7-06f2bfe291a0
 
 Getting scripts returns JSON array of view object
 
