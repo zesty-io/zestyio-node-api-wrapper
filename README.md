@@ -105,7 +105,7 @@ Creating a script
 ```
 let fileName = "my-script.js";
 let code = "alert('hello world');";
-let payload = {"code": code, "fileName": fileName};
+let payload = {"code": code, "fileName": fileName, "type": "text/javascript"};
 try {
 	let res = await zestyioRequests.createScript(payload);
 } catch (err){
