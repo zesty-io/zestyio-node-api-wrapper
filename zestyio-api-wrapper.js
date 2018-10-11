@@ -147,6 +147,8 @@ export default class ZestyioAPIWrapper {
 				}
 			}, (error, response, body) => {
 				body = JSON.parse(body);
+				console.log(response);
+				console.log(error);
 				if (!error && response.statusCode == 200) {
 					resolve(body)
 				} else {
@@ -170,6 +172,8 @@ export default class ZestyioAPIWrapper {
 			  }
 			}, (error, response, body) => {
 				body = JSON.parse(body);
+				console.log(response);
+				console.log(error);
         if (!error && response.statusCode == 200) {
           resolve(body)
         } else {
