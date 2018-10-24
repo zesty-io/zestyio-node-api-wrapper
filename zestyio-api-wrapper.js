@@ -181,9 +181,20 @@ class ZestyioAPIWrapper {
   async getInstanceUsers(){
     const instanceUsersAPIURL = this.replaceInURL(
       this.buildAPIURL(this.accountsAPIEndpoints.instanceUsersGET, 'accounts'),
-      { INSTANCE_ZUID:this.instanceZUID }
+      { INSTANCE_ZUID: this.instanceZUID }
     )
     return await this.getRequest(instanceUsersAPIURL)
+  }
+
+  // Media API functions
+  async getMediaBins() {
+    const siteId = await this.getSiteId()
+    const mediaBinsAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.binsGETAll, 'media'),
+      { SITE_ID: siteId }
+    )
+
+    return await this.getRequest(mediaBinsAPIURL)
   }
 
   async getRequest(url) {
