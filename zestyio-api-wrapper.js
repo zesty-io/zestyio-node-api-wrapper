@@ -49,8 +49,8 @@ class ZestyioAPIWrapper {
     this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
     this.accountsAPIURL = (options.hasOwnProperty('accountsAPIURL') ? options.accountsAPIURL : 'https://accounts.api.zesty.io/v1')
     this.mediaAPIURL = (options.hasOwnProperty('mediaAPIURL') ? options.mediaAPIURL : 'https://svc.zesty.io')
-    this.logErrors = (options.hasOwnProperty('logErrors') ? options.logErrors : true)
-    this.logResponses = (options.hasOwnProperty('logResponses') ? options.logResponses : true)
+    this.logErrors = (options.hasOwnProperty('logErrors') ? options.logErrors : false)
+    this.logResponses = (options.hasOwnProperty('logResponses') ? options.logResponses : false)
     
     this.instanceZUID = instanceZUID
     this.token = token
@@ -196,6 +196,24 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(mediaBinsAPIURL)
+  }
+
+  async getMediaBin(mediaBinId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.binsGET, 'media'),
+      { BIN_ID: mediaBinId }
+    )  
+
+    return await this.getRequest(mediaBinAPIURL)
+  }
+
+  async getMediaBinFiles(mediaBinId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.filesGETAll, 'media'),
+      { BIN_ID: mediaBinId }
+    )      
+
+    return await this.getRequest(mediaBinAPIURL)
   }
 
   async getRequest(url) {
