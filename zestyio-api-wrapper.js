@@ -58,7 +58,8 @@ class ZestyioAPIWrapper {
   }
 
   logError(msg) { // probably static
-    if (this.logErrors) {
+    // Don't log null messages
+    if (this.logErrors && msg !== null) {
       console.log(msg)
     }
   }
