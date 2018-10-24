@@ -12,9 +12,9 @@
     "wrapper",
     "node"
   ],
-	"engines" : {
-		"node": ">=8.9.4"
-	},
+  "engines": {
+    "node": ">=8.9.4"
+  },
   "repository": "https://github.com/zesty-io/zestyio-node-api-wrapper",
   "license": "GNU",
   "dependencies": {
