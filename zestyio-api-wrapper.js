@@ -3,11 +3,7 @@ const request = require('request').defaults({ strictSSL: false })
 class ZestyioAPIWrapper {
   constructor(instanceZUID, token, options = {}) {
     this.defaultAccessError = 'Request Failed'
-
-    this.logErrors = true
-    this.logResponses = true
   
-    this.instancesAPIURL = 'https://INSTANCE_ZUID.api.zesty.io/v1'
     this.instancesAPIEndpoints = {
       modelsGETAll: '/content/models',
       itemsGETAll: '/content/models/MODEL_ZUID/items',
@@ -27,13 +23,11 @@ class ZestyioAPIWrapper {
       scriptsPUT: '/web/scripts/SCRIPT_ZUID'
     }
   
-    this.accountsAPIURL = 'https://accounts.api.zesty.io/v1'
     this.accountsAPIEndpoints = {
       instanceGET: '/instances/INSTANCE_ZUID',
       instanceUsersGET: '/instances/INSTANCE_ZUID/users/roles'
     }
   
-    this.mediaAPIURL = 'https://svc.zesty.io'
     this.mediaAPIEndpoints = {
       binsPOST: '/media-manager-service/bin',
       binsGETAll: '/media-manager-service/site/SITE_ID/bins',
@@ -52,12 +46,12 @@ class ZestyioAPIWrapper {
       // Delete group
     }
 
-    if (options.hasOwnProperty('instancesAPIURL')) { this.instancesAPIURL = options.instancesAPIURL }
-    if (options.hasOwnProperty('accountsAPIURL')) { this.accountsAPIURL = options.accountsAPIURL }
-    if (options.hasOwnProperty('mediaAPIURL')) { this.mediaAPIURL = options.mediaAPIURL }
-    if (options.hasOwnProperty('logErrors')) { this.logErrors = options.logErrors }
-    if (options.hasOwnProperty('logResponses')) { this.logResponses = options.logResponses }
-
+    this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
+    this.accountsAPIURL = (options.hasOwnProperty('accountsAPIURL') ? options.accountsAPIURL : 'https://accounts.api.zesty.io/v1')
+    this.mediaAPIURL = (options.hasOwnProperty('mediaAPIURL') ? options.mediaAPIURL : 'https://svc.zesty.io')
+    this.logErrors = (options.hasOwnProperty('logErrors') ? options.logErrors : true)
+    this.logResponses = (options.hasOwnProperty('logResponses') ? options.logResponses : true)
+    
     this.instanceZUID = instanceZUID
     this.token = token
     this.makeInstancesAPIURL()
