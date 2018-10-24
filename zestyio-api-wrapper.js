@@ -225,6 +225,24 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
+  async getMediaBinGroups(mediaBinId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.groupsGETAll, 'media'),
+      { BIN_ID: mediaBinId }
+    )      
+
+    return await this.getRequest(mediaBinAPIURL)
+  }
+
+  async getMediaGroup(groupId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.groupsGET, 'media'),
+      { GROUP_ID: groupId }
+    )      
+
+    return await this.getRequest(mediaBinAPIURL)
+  }
+
   async getRequest(url) {
     const $this = this
     return new Promise((resolve, reject) => {
