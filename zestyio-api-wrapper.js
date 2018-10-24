@@ -216,6 +216,15 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
+  async getMediaFile(fileId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.filesGET, 'media'),
+      { FILE_ID: fileId }
+    )
+
+    return await this.getRequest(mediaBinAPIURL)
+  }
+
   async getRequest(url) {
     const $this = this
     return new Promise((resolve, reject) => {
