@@ -29,12 +29,33 @@ export default class ZestyioAPIWrapper {
 		"instanceUsersGET" : "/instances/INSTANCE_ZUID/users/roles"
 	};
 
+	mediaAPIEndpoints = {
+		"binsPOST" : "/media-manager-service/bin",
+		"binsGETAll": "/media-manager-service/site/SITE_ID/bins",
+		"binsGET":    "/media-manager-service/bin/BIN_ID",
+		// Update bin
+		// Delete bin
+		"filesPOST": "/media-storage-service/upload/gcp/SOME_ID", // TODO replace SOME_ID, remove gcp hard coding?
+		"filesGET": "/media-manager-service/file/FILE_ID",
+		"filesGETAll": "/media-manager-service/bin/BIN_ID/files",
+		// Update file
+		// Delete file
+		"groupsGET": "/media-manager-service/group/GROUP_ID",
+		"groupsGETAll": "/media-manager-service/bin/BIN_ID/groups",
+		"groupsPOST": "/media-manager-service/group",
+		// Update group
+		// Delete group
+	}
+
+	mediaAPIURL = "https://svc.zesty.io";
+
 	defaultAccessError = "Request Failed";
 
 	constructor(instanceZUID, token, options = {}) {
 
 		if(options.hasOwnProperty('instancesAPIURL')) this.instancesAPIURL = options.instancesAPIURL;
 		if(options.hasOwnProperty('accountsAPIURL')) 	this.accountsAPIURL = options.accountsAPIURL;
+		if(options.hasOwnProperaty('mediaAPIURL')) this.mediaAPIURL = options.mediaAPIURL;
 
 		this.instanceZUID = instanceZUID;
 		this.token = token;
@@ -48,8 +69,18 @@ export default class ZestyioAPIWrapper {
 			{'INSTANCE_ZUID':this.instanceZUID}
 		);
 	}
+
 	buildAPIURL(uri, api = "instances"){
-		return (api == "accounts") ? this.accountsAPIURL + uri : this.instancesAPIURL + uri;
+		switch(api) {
+			case "accounts":
+				return this.accountsAPIURL + uri;
+			case "instances":
+				return this.instancesAPIURL + uri;
+			case "media":
+				return this.mediaAPIURL + uri;
+			default:
+				return ""
+		}
 	}
 
 	replaceInURL(url, replacementObject){
