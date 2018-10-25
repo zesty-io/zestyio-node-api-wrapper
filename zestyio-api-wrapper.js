@@ -262,6 +262,19 @@ class ZestyioAPIWrapper {
     )
   }
 
+  // payload: group_id, name
+  async updateMediaGroup(groupId, payload) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.groupsPATCH, 'media'),
+      { GROUP_ID: groupId }
+    )
+
+    return await this.formPatchRequest(
+      mediaBinAPIURL,
+      payload
+    )
+  }
+
   async deleteMediaGroup(groupId) {
     const mediaBinAPIURL = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsDELETE, 'media'),
@@ -382,6 +395,31 @@ class ZestyioAPIWrapper {
         this.logError(error)
         body = JSON.parse(body)
         if (!error && response.statusCode === 201) {
+          resolve(body)
+        } else {
+          this.logError(error)
+          reject({
+            reason: $this.defaultAccessError
+          })
+        }
+      })
+    })
+  }
+
+  async formPatchRequest(url, payload) {
+    const $this = this
+    return new Promise((resolve, reject) => {
+      request.patch({
+        url : url,
+        auth: {
+          bearer: $this.token
+        },
+        formData: payload
+      }, (error, response, body) => {
+        this.logResponse(response)
+        this.logError(error)
+        body = JSON.parse(body)
+        if (!error && response.statusCode === 200) {
           resolve(body)
         } else {
           this.logError(error)
