@@ -30,20 +30,20 @@ class ZestyioAPIWrapper {
   
     this.mediaAPIEndpoints = {
       binsPOST: '/media-manager-service/bin', // Not yet
-      binsGETAll: '/media-manager-service/site/SITE_ID/bins', // DONE
-      binsGET: '/media-manager-service/bin/BIN_ID', // DONE
+      binsGETAll: '/media-manager-service/site/SITE_ID/bins',
+      binsGET: '/media-manager-service/bin/BIN_ID',
       binsPATCH: '/media-manager-service/bin/BIN_ID', // TODO?
       binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
-      filesPOST: '/media-storage-service/upload/STORAGE_DRIVER/STORAGE_NAME', // DONE
-      filesGET: '/media-manager-service/file/FILE_ID', // DONE
-      filesGETAll: '/media-manager-service/bin/BIN_ID/files', // DONE
-      filesPATCH: '/media-manager-service/file/FILE_ID', // DONE
-      filesDELETE: '/media-manager-service/file/FILE_ID', // DONE
-      groupsGET: '/media-manager-service/group/GROUP_ID', // DONE
-      groupsGETAll: '/media-manager-service/bin/BIN_ID/groups', // DONE
-      groupsPOST: '/media-manager-service/group', // DONE
-      groupsPATCH: '/media-manager-service/group/GROUP_ID', // DONE
-      groupsDELETE: '/media-manager-service/group/GROUP_ID' // DONE
+      filesPOST: '/media-storage-service/upload/STORAGE_DRIVER/STORAGE_NAME',
+      filesGET: '/media-manager-service/file/FILE_ID',
+      filesGETAll: '/media-manager-service/bin/BIN_ID/files',
+      filesPATCH: '/media-manager-service/file/FILE_ID',
+      filesDELETE: '/media-manager-service/file/FILE_ID',
+      groupsGET: '/media-manager-service/group/GROUP_ID',
+      groupsGETAll: '/media-manager-service/bin/BIN_ID/groups',
+      groupsPOST: '/media-manager-service/group',
+      groupsPATCH: '/media-manager-service/group/GROUP_ID',
+      groupsDELETE: '/media-manager-service/group/GROUP_ID'
     }
 
     this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
@@ -205,6 +205,16 @@ class ZestyioAPIWrapper {
     )  
 
     return await this.getRequest(mediaBinAPIURL)
+  }
+
+  // payload: name
+  async updateMediaBin(mediaBinId, payload) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.binsPATCH, 'media'),
+      { BIN_ID: mediaBinId }
+    )  
+
+    return await this.formPatchRequest(mediaBinAPIURL, payload)
   }
 
   async getMediaFiles(mediaBinId) {
