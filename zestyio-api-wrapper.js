@@ -37,13 +37,13 @@ class ZestyioAPIWrapper {
       filesPOST: '/media-storage-service/upload/gcp/SOME_ID', // TODO replace SOME_ID, remove gcp hard coding?
       filesGET: '/media-manager-service/file/FILE_ID', // DONE
       filesGETAll: '/media-manager-service/bin/BIN_ID/files', // DONE
+      filesDELETE: '/media-manager-service/file/FILE_ID', // DONE
       // Update file
-      // Delete file - probably not for now...
       groupsGET: '/media-manager-service/group/GROUP_ID', // DONE
       groupsGETAll: '/media-manager-service/bin/BIN_ID/groups', // DONE
       groupsPOST: '/media-manager-service/group', // DONE
-      // Update group
-      // Delete group - probably not for now...
+      groupsPATCH: '/media-manager-service/group/GROUP_ID',
+      groupsDELETE: '/media-manager-service/group/GROUP_ID' // DONE
     }
 
     this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
@@ -225,6 +225,15 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
+  async deleteMediaFile(fileId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.filesDELETE, 'media'),
+      { FILE_ID: fileId }
+    )
+
+    return await this.deleteRequest(mediaBinAPIURL)
+  }
+
   async getMediaGroups(mediaBinId) {
     const mediaBinAPIURL = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsGETAll, 'media'),
@@ -253,6 +262,15 @@ class ZestyioAPIWrapper {
     )
   }
 
+  async deleteMediaGroup(groupId) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.groupsDELETE, 'media'),
+      { GROUP_ID: groupId }
+    )
+
+    return await this.deleteRequest(mediaBinAPIURL)
+  }
+
   async getRequest(url) {
     const $this = this
     return new Promise((resolve, reject) => {
@@ -275,6 +293,29 @@ class ZestyioAPIWrapper {
       })
     })
   }
+
+  async deleteRequest(url) {
+    const $this = this
+    return new Promise((resolve, reject) => {
+      request.delete(url, {
+        auth: {
+          bearer: $this.token
+        }
+      }, (error, response, body) => {
+        body = JSON.parse(body)
+        this.logResponse(response)
+        this.logError(error)
+        if (!error && response.statusCode === 200) {
+          resolve(body)
+        } else {
+          this.logError(error)
+          reject({
+            reason: $this.defaultAccessError
+          })
+        }
+      })
+    })
+  }  
 
   async putRequest(url, payload) {
     const $this = this
