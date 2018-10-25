@@ -29,20 +29,20 @@ class ZestyioAPIWrapper {
     }
   
     this.mediaAPIEndpoints = {
-      binsPOST: '/media-manager-service/bin',
+      binsPOST: '/media-manager-service/bin', // Not yet
       binsGETAll: '/media-manager-service/site/SITE_ID/bins', // DONE
       binsGET: '/media-manager-service/bin/BIN_ID', // DONE
-      // Update bin
-      // Delete bin - probably not for now...
+      binsPATCH: '/media-manager-service/bin/BIN_ID', // TODO?
+      binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
       filesPOST: '/media-storage-service/upload/gcp/SOME_ID', // TODO replace SOME_ID, remove gcp hard coding?
       filesGET: '/media-manager-service/file/FILE_ID', // DONE
       filesGETAll: '/media-manager-service/bin/BIN_ID/files', // DONE
+      filesPATCH: '/media-manager-service/file/FILE_ID', // DONE
       filesDELETE: '/media-manager-service/file/FILE_ID', // DONE
-      // Update file
       groupsGET: '/media-manager-service/group/GROUP_ID', // DONE
       groupsGETAll: '/media-manager-service/bin/BIN_ID/groups', // DONE
       groupsPOST: '/media-manager-service/group', // DONE
-      groupsPATCH: '/media-manager-service/group/GROUP_ID',
+      groupsPATCH: '/media-manager-service/group/GROUP_ID', // DONE
       groupsDELETE: '/media-manager-service/group/GROUP_ID' // DONE
     }
 
@@ -223,6 +223,16 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(mediaBinAPIURL)
+  }
+
+  // payload: filename, title, group_id
+  async updateMediaFile(fileId, payload) {
+    const mediaBinAPIURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.filesPATCH, 'media'),
+      { FILE_ID: fileId }
+    )
+
+    return await this.formPatchRequest(mediaBinAPIURL, payload)
   }
 
   async deleteMediaFile(fileId) {
