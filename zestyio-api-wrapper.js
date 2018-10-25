@@ -34,7 +34,7 @@ class ZestyioAPIWrapper {
       binsGET: '/media-manager-service/bin/BIN_ID', // DONE
       binsPATCH: '/media-manager-service/bin/BIN_ID', // TODO?
       binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
-      filesPOST: '/media-storage-service/upload/gcp/SOME_ID', // TODO replace SOME_ID, remove gcp hard coding?
+      filesPOST: '/media-storage-service/upload/STORAGE_DRIVER/STORAGE_NAME', // DONE
       filesGET: '/media-manager-service/file/FILE_ID', // DONE
       filesGETAll: '/media-manager-service/bin/BIN_ID/files', // DONE
       filesPATCH: '/media-manager-service/file/FILE_ID', // DONE
@@ -223,6 +223,33 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(mediaBinAPIURL)
+  }
+
+  async createMediaFile(binId, groupId, fileName, contentType, stream) {
+    let bin = await this.getMediaBin(binId)
+    bin = bin.data[0]
+
+    const mediaUploadURL = this.replaceInURL(
+      this.buildAPIURL(this.mediaAPIEndpoints.filesPOST, 'media'),
+      {
+        STORAGE_DRIVER: bin.storage_driver,
+        STORAGE_NAME: bin.storage_name
+      }
+    )
+
+    return await this.formPostRequest(mediaUploadURL, {
+      bin_id: binId,
+      group_id: groupId,
+      file: {
+        value: stream,
+        options: {
+          filename: fileName,
+          contentType: contentType
+        }
+      }
+      // NOTE: user_id - seems to be optional, didn't add it because
+      // it adds another API call overhead for no benefit?
+    })
   }
 
   // payload: filename, title, group_id
