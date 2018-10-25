@@ -29,11 +29,11 @@ class ZestyioAPIWrapper {
     }
   
     this.mediaAPIEndpoints = {
-      binsPOST: '/media-manager-service/bin', // Not yet
+      // binsPOST: '/media-manager-service/bin', // Not yet
       binsGETAll: '/media-manager-service/site/SITE_ID/bins',
       binsGET: '/media-manager-service/bin/BIN_ID',
-      binsPATCH: '/media-manager-service/bin/BIN_ID', // TODO?
-      binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
+      binsPATCH: '/media-manager-service/bin/BIN_ID',
+      // binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
       filesPOST: '/media-storage-service/upload/STORAGE_DRIVER/STORAGE_NAME',
       filesGET: '/media-manager-service/file/FILE_ID',
       filesGETAll: '/media-manager-service/bin/BIN_ID/files',
@@ -57,14 +57,14 @@ class ZestyioAPIWrapper {
     this.makeInstancesAPIURL()
   }
 
-  logError(msg) { // probably static
+  logError(msg) {
     // Don't log null messages
     if (this.logErrors && msg !== null) {
       console.log(msg)
     }
   }
 
-  logResponse(msg) { // probably static
+  logResponse(msg) {
     if (this.logResponses) {
       console.log(msg)
     }
@@ -341,7 +341,7 @@ class ZestyioAPIWrapper {
       }, (error, response, body) => {
         body = JSON.parse(body)
         this.logResponse(response)
-        this.logError(error)
+
         if (!error && response.statusCode === 200) {
           resolve(body)
         } else {
@@ -364,7 +364,7 @@ class ZestyioAPIWrapper {
       }, (error, response, body) => {
         body = JSON.parse(body)
         this.logResponse(response)
-        this.logError(error)
+
         if (!error && response.statusCode === 200) {
           resolve(body)
         } else {
@@ -389,7 +389,6 @@ class ZestyioAPIWrapper {
       }, (error, response, body) => {
         body = JSON.parse(body)
         this.logResponse(response)
-        this.logError(error)
         
         if (!error && response.statusCode === 200) {
           resolve(body)
@@ -414,8 +413,8 @@ class ZestyioAPIWrapper {
         }
       }, (error, response, body) => {
         this.logResponse(response)
-        this.logError(error)
         body = JSON.parse(body)
+
         if (!error && response.statusCode === 201) {
           resolve(body)
         } else {
@@ -439,8 +438,8 @@ class ZestyioAPIWrapper {
         formData: payload
       }, (error, response, body) => {
         this.logResponse(response)
-        this.logError(error)
         body = JSON.parse(body)
+
         if (!error && response.statusCode === 201) {
           resolve(body)
         } else {
@@ -464,8 +463,8 @@ class ZestyioAPIWrapper {
         formData: payload
       }, (error, response, body) => {
         this.logResponse(response)
-        this.logError(error)
         body = JSON.parse(body)
+
         if (!error && response.statusCode === 200) {
           resolve(body)
         } else {
