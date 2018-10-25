@@ -30,20 +30,20 @@ class ZestyioAPIWrapper {
   
     this.mediaAPIEndpoints = {
       binsPOST: '/media-manager-service/bin',
-      binsGETAll: '/media-manager-service/site/SITE_ID/bins',
-      binsGET: '/media-manager-service/bin/BIN_ID',
+      binsGETAll: '/media-manager-service/site/SITE_ID/bins', // DONE
+      binsGET: '/media-manager-service/bin/BIN_ID', // DONE
       // Update bin
-      // Delete bin
+      // Delete bin - probably not for now...
       filesPOST: '/media-storage-service/upload/gcp/SOME_ID', // TODO replace SOME_ID, remove gcp hard coding?
-      filesGET: '/media-manager-service/file/FILE_ID',
-      filesGETAll: '/media-manager-service/bin/BIN_ID/files',
+      filesGET: '/media-manager-service/file/FILE_ID', // DONE
+      filesGETAll: '/media-manager-service/bin/BIN_ID/files', // DONE
       // Update file
-      // Delete file
-      groupsGET: '/media-manager-service/group/GROUP_ID',
-      groupsGETAll: '/media-manager-service/bin/BIN_ID/groups',
-      groupsPOST: '/media-manager-service/group',
+      // Delete file - probably not for now...
+      groupsGET: '/media-manager-service/group/GROUP_ID', // DONE
+      groupsGETAll: '/media-manager-service/bin/BIN_ID/groups', // DONE
+      groupsPOST: '/media-manager-service/group', // DONE
       // Update group
-      // Delete group
+      // Delete group - probably not for now...
     }
 
     this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
@@ -207,7 +207,7 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
-  async getMediaBinFiles(mediaBinId) {
+  async getMediaFiles(mediaBinId) {
     const mediaBinAPIURL = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesGETAll, 'media'),
       { BIN_ID: mediaBinId }
@@ -225,7 +225,7 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
-  async getMediaBinGroups(mediaBinId) {
+  async getMediaGroups(mediaBinId) {
     const mediaBinAPIURL = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsGETAll, 'media'),
       { BIN_ID: mediaBinId }
@@ -241,6 +241,16 @@ class ZestyioAPIWrapper {
     )      
 
     return await this.getRequest(mediaBinAPIURL)
+  }
+
+  // payload: bin_id, group_id, name
+  async createMediaGroup(payload) {
+    const mediaBinAPIURL = this.buildAPIURL(this.mediaAPIEndpoints.groupsPOST, 'media')
+
+    return await this.formPostRequest(
+      mediaBinAPIURL, 
+      payload
+    )
   }
 
   async getRequest(url) {
@@ -292,7 +302,7 @@ class ZestyioAPIWrapper {
     })
   }
 
-  async postRequest(url,payload) {
+  async postRequest(url, payload) {
     const $this = this
     return new Promise((resolve, reject) => {
       request.post({
@@ -301,6 +311,31 @@ class ZestyioAPIWrapper {
         auth: {
           bearer: $this.token
         }
+      }, (error, response, body) => {
+        this.logResponse(response)
+        this.logError(error)
+        body = JSON.parse(body)
+        if (!error && response.statusCode === 201) {
+          resolve(body)
+        } else {
+          this.logError(error)
+          reject({
+            reason: $this.defaultAccessError
+          })
+        }
+      })
+    })
+  }
+
+  async formPostRequest(url, payload) {
+    const $this = this
+    return new Promise((resolve, reject) => {
+      request.post({
+        url : url,
+        auth: {
+          bearer: $this.token
+        },
+        formData: payload
       }, (error, response, body) => {
         this.logResponse(response)
         this.logError(error)
