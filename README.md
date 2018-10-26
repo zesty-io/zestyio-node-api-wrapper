@@ -1,129 +1,363 @@
 # Zesty.io Node API Wrapper
 
-Quickly access zesty.io's instance and accounts API.
+Quickly access Zesty.io's Instance, Accounts and Media Management APIs.
 
-## Usage
+## Installation
 
-This tutorial assumes you have NPM installed, and have a package.json file running in your project.
+This tutorial assumes you have npm and Node.js (8.9.4 or greater) installed, and have a `package.json` file for your project.
 
-Install via NPM:
+Install via npm:
 
 ```
 npm install --save git+https://github.com/zesty-io/zestyio-node-api-wrapper.git
 ```
 
-Include this line at the top of your file
+Include this line at the top of your JavaScript project file:
 
 ```
-const ZestyioAPIRequests = require('zestyio-api-wrapper');
+const Zesty = require('zestyio-api-wrapper');
 ```
 
-### Instantiating
+## Instantiation
+
+You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager: go to the "Editor" section, and click on the "External Editing" button to display the values for your Zesty.io instance.
 
 ```
-let token = "PRIVATE_TOKEN_FROM_ZESTYIO"; // this should be loaded from an env file
-let instanceZUID = "8-b0a6c2b192-xkgt38"; // ZUID of the Zesty.io Cloud Content Instance on which to make requests
+const token = 'PRIVATE_TOKEN_FROM_ZESTYIO' // Keep in env file not in code
+const instanceZUID = '8-b0a6c2b192-xkgt38' // ZUID of the Zesty.io Cloud Content Instance on which to make requests
 
-const zestyioRequests = new ZestyioAPIRequests(instanceZUID, token);
+const zesty = new Zesty(instanceZUID, token)
+```
 
+You can optionally enable API request and error logging by setting one or both of the `logErrors` and `logResponses` flags:
+
+```
+const zesty = new Zesty(
+  instanceZUID,
+  token,
+  {
+    logErrors: true,
+    logResponses: true
+  }
+)
 ```
 
 ## Making Calls
 
 ### Views
-CRUD on Zesty.io view files. See documentation here:
-https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833
 
-Getting views returns JSON array of view object
+The wrapper allows CRUD on Zesty.io view files. See documentation [here](https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833):
+
+Getting views returns a JSON array of view objects:
 
 ```
 try {
-	let res = await zestyioRequests.getViews();
+  const res = await zesty.getViews()
 } catch(err) {
-	console.log(err);
+  console.log(err)
 }
 ```
 
-Creating a view (snippet)
+Creating a view (snippet):
 
 ```
-let fileName = "navigation-snippet";
-let code = "my view content";
-let payload = {"code": code, "fileName": fileName};
+const fileName = 'navigation-snippet'
+const code = 'my view content'
+const payload = { 
+  code: code, 
+  fileName: fileName 
+}
+
 try {
-	let res = await zestyioRequests.createView(payload);
-} catch (err){
-	console.log(err);
+  const res = await zesty.createView(payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Creating a view (endpoint):
+
+```
+const fileName = '/special-endpoint.json'
+const code = JSON.stringify({ foo: 'bar' })
+const payload = { 
+  code: code, 
+  type: 'ajax-json', 
+  fileName: fileName
 }
 
-```
-
-Creating a view (endpoint)
-
-```
-let fileName = "/special-endpoint.json";
-let code = JSON.stringify({"foo":"bar"});
-let payload = {"code": code,"type":"ajax-json", "fileName": fileName};
 try {
-	let res = await zestyioRequests.createView(payload);
-} catch (err){
-	console.log(err);
+  const res = await zesty.createView(payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Saving a view, returns a JSON object:
+
+```
+const viewZUID = '11-dbe794-wx5ppr'
+const code = 'my view content'
+const payload = {
+  code: code
 }
 
-```
-
-Saving a view, returns a JSON object
-
-```
-let viewZUID = "11-dbe794-wx5ppr";
-let code = "my view content";
-let payload = {"code": code};
 try {
-	let res = await zestyioRequests.saveView(viewZUID, payload);
-} catch (err){
-	console.log(err);
+  const res = await zesty.saveView(viewZUID, payload)
+} catch (err) {
+  console.log(err)
 }
-
 ```
 
 ### Scripts
-CRUD on Zesty.io script files. See documentation here:
-https://instances-api.zesty.org/#83f109ba-94a8-4647-8cb7-06f2bfe291a0
 
-Getting scripts returns JSON array of view object
+CRUD on Zesty.io script files. See documentation [here](https://instances-api.zesty.org/#83f109ba-94a8-4647-8cb7-06f2bfe291a0).
+
+Getting scripts returns a JSON array of view objects:
 
 ```
 try {
-	let res = await zestyioRequests.getScripts();
+  const res = await zesty.getScripts()
 } catch(err) {
-	console.log(err);
+  console.log(err)
 }
 ```
 
-Creating a script
+Creating a script:
 
 ```
-let fileName = "my-script.js";
-let code = "alert('hello world');";
-let payload = {"code": code, "fileName": fileName, "type": "text/javascript"};
+const fileName = 'my-script.js'
+const code = "alert('hello world');"
+const payload = { 
+  code: code, 
+  fileName: fileName, 
+  type: 'text/javascript'
+}
+
 try {
-	let res = await zestyioRequests.createScript(payload);
-} catch (err){
-	console.log(err);
+  const res = await zesty.createScript(payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Saving a script, returns a JSON object:
+
+```
+const scriptZUID = '10-3568a8-79ml1q'
+const code = "alert('hello world');"
+const payload = { 
+  code: code
 }
 
-```
-
-Saving a script, return a JSON object
-
-```
-let scriptZUID = "10-3568a8-79ml1q";
-let code = "my script content";
-let payload = {"code": code};
 try {
-	let res = await zestyioRequests.saveScript(scriptZUID, payload);
-} catch (err){
-	console.log(err);
+  const res = await zesty.saveScript(scriptZUID, payload)
+} catch (err) {
+  console.log(err)
 }
+```
 
+## Media Management Calls
+
+### Media Bins
+
+Get all media bins:
+
+```
+try {
+  const binsResponse = await zesty.getMediaBins()
+  const firstBin = binsResponse.data[0]
+  const firstBinId = firstBin.id
+} catch (err) {
+  console.log(err)
+} 
+```
+
+Get media bin by ID:
+
+```
+try {
+  const binId = 'media bin ID'
+  const binResponse = await zesty.getMediaBin(binId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Update media bin by ID:
+
+(Allows for bin name to be updated).
+
+```
+const binId = 'media bin ID'
+
+try {
+  const binUpdateResponse = await zesty.updateMediaBin(binId, {
+    name: 'New Name'
+  })
+} catch (err) {
+  console.log(err)
+}
+```
+
+### Media Groups (Folders)
+
+Get all media groups in a bin:
+
+```
+const binId = 'media bin ID'
+
+try {
+  const binGroupsResponse = await zesty.getMediaGroups(binId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Get media group by ID:
+
+```
+const groupId = 'media group ID'
+
+try {
+  const groupResponse = await zesty.getMediaGroup(groupId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Create media group:
+
+```
+const binId = 'media bin ID'
+const groupId = 'parent group ID - optional'
+const name = 'new group name - optional defaults to new folder'
+
+try {
+  const createGroupResponse = await zesty.createMediaGroup({
+    bin_id: binId,
+    group_id: groupId,
+    name: name
+  })
+} catch (err) {
+  console.log(err)
+}
+```
+
+Update media group by ID:
+
+```
+const groupId = 'group ID to update'
+const parentGroupId = 'parent group ID - optional'
+const name = 'new group name - optional'
+
+try {
+  const updateGroupResponse = await zesty.updateMediaGroup(
+    groupId, 
+    {
+      group_id: parentGroupId,
+      name: name
+    }
+  )
+} catch (err) {
+  console.log(err)
+}
+```
+
+Delete media group by ID:
+
+```
+const groupId = 'group ID to delete'
+
+try {
+  const deleteGroupResponse = await zesty.deleteMediaGroup(groupId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+
+### Media Files
+
+Get all media files in a bin:
+
+```
+const binId = 'media bin ID'
+
+try {
+  const binFilesResponse = await zesty.getMediaFiles(binId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Get media file by ID:
+
+```
+const fileId = 'media file ID'
+
+try {
+  const fileResponse = await zesty.getMediaFile(fileId)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Create (upload) media file:
+
+```
+const fs = require('fs')
+const fileName = 'test.jpg'
+const stream = fs.createReadStream(`/path/to/${fileName}`)
+const fileType = 'image/jpeg'
+const binId = 'media bin ID'
+const groupId = 'media group ID, use bin ID for root folder in bin'
+
+try {
+  const createFileResponse = await zesty.createMediaFile(
+    binId,
+    groupId,
+    fileName,
+    fileType,
+    stream
+  )
+} catch (err) {
+  console.log(err)
+}
+```
+
+Update media file by ID:
+
+(Allows ability to change file name, display title, group that the file is in).
+
+```
+const fileId = 'media file ID'
+const newName = 'newname.jpg - optional'
+const newTitle = 'New Title - optional'
+const newGroup = 'new group ID - optional'
+
+try {
+  const updateFileResponse = await zesty.updateMediaFile(
+    fileId,
+    {
+      filename: newName,
+      title: newTitle,
+      group_id: newGroup
+    }
+  )
+} catch (err) {
+  console.log(err)
+}
+```
+
+Delete media file by ID:
+
+```
+const fileId = 'media file ID'
+
+try {
+  const deleteFileResponse = await zesty.deleteMediaFile(fileId)
+} catch (err) {
+  console.log(err)
+}
 ```
