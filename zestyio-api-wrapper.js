@@ -6,6 +6,7 @@ class ZestyioAPIWrapper {
   
     this.instancesAPIEndpoints = {
       modelsGETAll: '/content/models',
+      fieldsGETAll: '/content/models/MODEL_ZUID/fields',
       itemsGETAll: '/content/models/MODEL_ZUID/items',
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
@@ -94,6 +95,7 @@ class ZestyioAPIWrapper {
     for (const key in replacementObject) {
       url = url.replace(key, replacementObject[key])
     }
+
     return url
   }
 
@@ -110,16 +112,29 @@ class ZestyioAPIWrapper {
 
   async getModels() {
     const modelsURL =  this.buildAPIURL(this.instancesAPIEndpoints.modelsGETAll)
+    
     return await this.getRequest(modelsURL)
+  }
+
+  async getFields(modelZUID) {
+    const fieldsURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.fieldsGETAll,
+        { MODEL_ZUID: modelZUID }
+      )
+    )
+
+    return await this.getRequest(fieldsURL)
   }
 
   async getItems(modelZUID) {
     const itemsURL = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETAll,
-        { MODEL_ZUID:modelZUID }
+        { MODEL_ZUID: modelZUID }
       )
     )
+
     return await this.getRequest(itemsURL)
   }
 
@@ -132,6 +147,7 @@ class ZestyioAPIWrapper {
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
       { VIEW_ZUID: viewZUID }
     )
+
     return await this.putRequest(viewPutURL, payload)
   }
 
@@ -148,6 +164,7 @@ class ZestyioAPIWrapper {
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUT),
       { SCRIPT_ZUID: scriptZUID }
     )
+
     return await this.putRequest(scriptPutURL, payload)
   }
 
@@ -164,6 +181,7 @@ class ZestyioAPIWrapper {
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUT),
       { STYLESHEET_ZUID: stylesheetZUID }
     )
+
     return await this.putRequest(stylesheetPutURL, payload)
   }
 
@@ -176,6 +194,7 @@ class ZestyioAPIWrapper {
       this.buildAPIURL(this.accountsAPIEndpoints.instanceGET, 'accounts'),
       { INSTANCE_ZUID: this.instanceZUID }
     )
+
     return await this.getRequest(instanceGETURL)
   }
 
@@ -184,6 +203,7 @@ class ZestyioAPIWrapper {
       this.buildAPIURL(this.accountsAPIEndpoints.instanceUsersGET, 'accounts'),
       { INSTANCE_ZUID: this.instanceZUID }
     )
+
     return await this.getRequest(instanceUsersAPIURL)
   }
 
