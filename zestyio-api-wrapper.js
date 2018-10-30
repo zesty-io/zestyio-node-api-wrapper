@@ -16,6 +16,7 @@ class ZestyioAPIWrapper {
       viewsPOST: '/web/views',
       viewsPUT: '/web/views/VIEW_ZUID',
       viewsPUTPUBLISH: '/web/views/VIEW_ZUID?publish=true',
+      settingsGETAll: '/env/settings',
       stylesheetsGETAll: '/web/stylesheets',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
@@ -205,6 +206,10 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(instanceUsersAPIURL)
+  }
+
+  async getSettings() {
+    return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.settingsGETAll))
   }
 
   // Media API functions
