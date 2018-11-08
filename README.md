@@ -9,7 +9,7 @@ This tutorial assumes you have npm and Node.js (8.9.4 or greater) installed, and
 Install via npm:
 
 ```
-npm install --save git+https://github.com/zesty-io/zestyio-node-api-wrapper.git
+npm install zestyio-api-wrapper
 ```
 
 Include this line at the top of your JavaScript project file:
@@ -63,9 +63,9 @@ Creating a view (snippet):
 ```
 const fileName = 'navigation-snippet'
 const code = 'my view content'
-const payload = { 
-  code: code, 
-  fileName: fileName 
+const payload = {
+  code: code,
+  fileName: fileName
 }
 
 try {
@@ -80,9 +80,9 @@ Creating a view (endpoint):
 ```
 const fileName = '/special-endpoint.json'
 const code = JSON.stringify({ foo: 'bar' })
-const payload = { 
-  code: code, 
-  type: 'ajax-json', 
+const payload = {
+  code: code,
+  type: 'ajax-json',
   fileName: fileName
 }
 
@@ -128,9 +128,9 @@ Creating a script:
 ```
 const fileName = 'my-script.js'
 const code = "alert('hello world');"
-const payload = { 
-  code: code, 
-  fileName: fileName, 
+const payload = {
+  code: code,
+  fileName: fileName,
   type: 'text/javascript'
 }
 
@@ -146,7 +146,7 @@ Saving a script, returns a JSON object:
 ```
 const scriptZUID = '10-3568a8-79ml1q'
 const code = "alert('hello world');"
-const payload = { 
+const payload = {
   code: code
 }
 
@@ -170,7 +170,7 @@ try {
   const firstBinId = firstBin.id
 } catch (err) {
   console.log(err)
-} 
+}
 ```
 
 Get media bin by ID:
@@ -253,7 +253,7 @@ const name = 'new group name - optional'
 
 try {
   const updateGroupResponse = await zesty.updateMediaGroup(
-    groupId, 
+    groupId,
     {
       group_id: parentGroupId,
       name: name
