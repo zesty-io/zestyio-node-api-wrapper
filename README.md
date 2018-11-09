@@ -173,6 +173,26 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Bin',
+  status: 'OK',
+  code: 200,
+  data:[ 
+    { 
+      id: '<Bin ZUID>',
+      name: '<Bin Name>',
+      created_at: '2018-07-09T21:50:27.000Z',
+      deleted_at: null,
+      default: true 
+    },
+    ...
+  ] 
+}
+```       
+
 Get media bin by ID:
 
 ```
@@ -181,6 +201,24 @@ try {
   const binResponse = await zesty.getMediaBin(binId)
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: 'Bin',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<Bin ZUID>',
+      name: '<Bin Name>',
+      created_at: '2018-07-09T21:50:27.000Z',
+      deleted_at: null
+    } 
+  ] 
 }
 ```
 
@@ -200,6 +238,22 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Bin <Bin ZUID> updated',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<Bin ZUID>', 
+      name: 'New Name' 
+    } 
+  ] 
+}
+```
+
 ### Media Groups (Folders)
 
 Get all media groups in a bin:
@@ -214,6 +268,25 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Folder',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<Group ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Parent Group ZUID>',
+      name: '<Group Name>' 
+    },
+    ...
+  ] 
+}
+```
+
 Get media group by ID:
 
 ```
@@ -223,6 +296,40 @@ try {
   const groupResponse = await zesty.getMediaGroup(groupId)
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: 'group',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<Group ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Parent Group ZUID>',
+      name: '<Group Name>',
+      groups: [],
+      files: [ 
+        { 
+          id: '<File ZUID>',
+          bin_id: '<Bin ZUID>',
+          group_id: '<Group ZUID>',
+          filename: '<Filename>',
+          title: '<File Display Name>',
+          url: '<URL to file>',
+          created_by: null,
+          created_at: '2018-10-22T23:13:24.000Z',
+          updated_at: '2018-10-22T23:13:40.000Z',
+          deleted_at: null
+        },
+        ... 
+      ] 
+    } 
+  ] 
 }
 ```
 
@@ -241,6 +348,25 @@ try {
   })
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: 'Created folder <Group Name>',
+  status: 'OK',
+  code: 201,
+  data: [ 
+    { 
+      id: '<Group ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Parent Group ZUID>',
+      name: '<Group Name>',
+      type: 'group' 
+    } 
+  ] 
 }
 ```
 
@@ -264,6 +390,23 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Updated group <Group Name>',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<Group ZUID>',
+      name: '<Group Name>',
+      group_id: '<Parent Group ZUID>' 
+     } 
+  ] 
+}
+```
+
 Delete media group by ID:
 
 ```
@@ -276,6 +419,15 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Deleted group <Group ZUID>',
+  status: 'OK',
+  code: 200 
+}
+```
 
 ### Media Files
 
@@ -291,6 +443,31 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Group',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<File ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Group ZUID>',
+      filename: '<File name>',
+      title: '<File display name>',
+      url: '<URL to file>',
+      created_by: null,
+      created_at: '2018-10-22T23:13:24.000Z',
+      updated_at: '2018-10-22T23:13:40.000Z',
+      deleted_at: null,
+    },
+    ...
+  ] 
+}
+```
+
 Get media file by ID:
 
 ```
@@ -300,6 +477,30 @@ try {
   const fileResponse = await zesty.getMediaFile(fileId)
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: 'Files',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<File ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Group ZUID>',
+      filename: '<File name>',
+      title: '<File display name>',
+      url: '<URL to file>',
+      created_by: null,
+      created_at: '2018-10-22T23:13:24.000Z',
+      updated_at: '2018-10-22T23:13:40.000Z',
+      deleted_at: null
+    } 
+  ] 
 }
 ```
 
@@ -323,6 +524,27 @@ try {
   )
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: 'File uploaded',
+  status: 'Created',
+  data: [ 
+    { 
+      id: '<File ZUID>',
+      bin_id: '<Bin ZUID>',
+      group_id: '<Group ZUID>',
+      filename: '<File name>',
+      title: '<File display name>',
+      url: '<URL to file>',
+      type: 'file' 
+    } 
+  ],
+  code: 201 
 }
 ```
 
@@ -350,6 +572,25 @@ try {
 }
 ```
 
+Abbreviated response format:
+
+```
+{ 
+  message: 'Updated file <File Name>',
+  status: 'OK',
+  code: 200,
+  data: [ 
+    { 
+      id: '<File ZUID>',
+      group_id: '<Group ZUID>',
+      title: '<File Display Title>',
+      filename: '<File Name>',
+      url: '<URL to file>' 
+    } 
+  ] 
+}
+```
+
 Delete media file by ID:
 
 ```
@@ -359,5 +600,15 @@ try {
   const deleteFileResponse = await zesty.deleteMediaFile(fileId)
 } catch (err) {
   console.log(err)
+}
+```
+
+Abbreviated response format:
+
+```
+{ 
+  message: '1 files deleted and purging',
+  status: 'OK',
+  code: 200 
 }
 ```
