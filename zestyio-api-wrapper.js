@@ -6,6 +6,7 @@ class ZestyioAPIWrapper {
   
     this.instancesAPIEndpoints = {
       modelsGETAll: '/content/models',
+      modelsGET: '/content/models/MODEL_ZUID',
       fieldsGETAll: '/content/models/MODEL_ZUID/fields',
       itemsGETAll: '/content/models/MODEL_ZUID/items',
       itemsPOST: '/content/models/MODEL_ZUID/items',
@@ -118,6 +119,17 @@ class ZestyioAPIWrapper {
     const modelsURL =  this.buildAPIURL(this.instancesAPIEndpoints.modelsGETAll)
     
     return await this.getRequest(modelsURL)
+  }
+
+  async getModel(modelZUID) {
+    const modelURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.modelsGET,
+        { MODEL_ZUID: modelZUID }
+      )
+    )
+
+    return await this.getRequest(modelURL)
   }
 
   async getFields(modelZUID) {
