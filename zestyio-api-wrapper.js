@@ -10,6 +10,9 @@ class ZestyioAPIWrapper {
       itemsGETAll: '/content/models/MODEL_ZUID/items',
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
+      itemsGETPublishings: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings',
+      itemsGETVersions: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions',
+      itemsGETVersion: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions/VERSION_NUMBER',
       itemsPUT: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
       viewsGETAll: '/web/views',
       viewsGET: '/web/views/VIEW_ZUID',
@@ -128,6 +131,34 @@ class ZestyioAPIWrapper {
     return await this.getRequest(fieldsURL)
   }
 
+  async getItem(modelZUID, itemZUID) {
+    const itemURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsGET,
+        { 
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID
+        }
+      )
+    )
+
+    return await this.getRequest(itemURL)
+  }
+
+  async getItemPublishings(modelZUID, itemZUID) {
+    const itemPublishingsURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsGETPublishings,
+        {
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID
+        }
+      )
+    )
+
+    return await this.getRequest(itemPublishingsURL)
+  }
+
   async getItems(modelZUID) {
     const itemsURL = this.buildAPIURL(
       this.replaceInURL(
@@ -137,6 +168,35 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(itemsURL)
+  }
+
+  async getItemVersions(modelZUID, itemZUID) {
+    const itemVersionsURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsGETVersions,
+        { 
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID
+        }
+      )
+    )
+
+    return await this.getRequest(itemVersionsURL)
+  }
+
+  async getItemVersion(modelZUID, itemZUID, versionNumber) {
+    const itemVersionURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsGETVersion,
+        {
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID,
+          VERSION_NUMBER: versionNumber
+        }
+      )
+    )
+
+    return await this.getRequest(itemVersionURL)
   }
 
   async getViews() {
