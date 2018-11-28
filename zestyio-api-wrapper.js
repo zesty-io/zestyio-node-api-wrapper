@@ -203,6 +203,19 @@ class ZestyioAPIWrapper {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsGETAll))
   }
 
+  async getView(viewZUID) {
+    const viewGetURL = this.replaceInURL(
+      this.buildAPIURL(
+        this.replaceInURL(
+          this.instancesAPIEndpoints.viewsGET,
+          { VIEW_ZUID: viewZUID }
+        )
+      )
+    )
+
+    return await this.getRequest(viewGetURL)
+  }
+
   async saveView(viewZUID, payload) {
     const viewPutURL = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
