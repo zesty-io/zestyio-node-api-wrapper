@@ -8,6 +8,7 @@ class ZestyioAPIWrapper {
       modelsGETAll: '/content/models',
       modelsGET: '/content/models/MODEL_ZUID',
       fieldsGETAll: '/content/models/MODEL_ZUID/fields',
+      fieldGET: '/content/models/MODEL_ZUID/fields/FIELD_ZUID',
       itemsGETAll: '/content/models/MODEL_ZUID/items',
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
@@ -141,6 +142,20 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(fieldsURL)
+  }
+
+  async getField(modelZUID, fieldZUID) {
+    const fieldURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.fieldGET,
+        {
+          MODEL_ZUID: modelZUID,
+          FIELD_ZUID: fieldZUID
+        }
+      )
+    )
+
+    return await this.getRequest(fieldURL)
   }
 
   async getItem(modelZUID, itemZUID) {
