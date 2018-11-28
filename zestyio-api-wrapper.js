@@ -23,6 +23,7 @@ class ZestyioAPIWrapper {
       viewsPUTPUBLISH: '/web/views/VIEW_ZUID?publish=true',
       settingsGETAll: '/env/settings',
       stylesheetsGETAll: '/web/stylesheets',
+      stylesheetsGET: '/web/stylesheets/STYLESHEET_ZUID',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
       scriptsGETAll: '/web/scripts',
@@ -275,6 +276,15 @@ class ZestyioAPIWrapper {
 
   async getStylesheets() {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETAll))
+  }
+
+  async getStylesheet(stylesheetZUID) {
+    const stylesheetURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGET),
+      { STYLESHEET_ZUID: stylesheetZUID }
+    )
+
+    return await this.getRequest(stylesheetURL)
   }
 
   async saveStylesheet(stylesheetZUID, payload) {
