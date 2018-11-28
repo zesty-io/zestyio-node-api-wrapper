@@ -27,6 +27,7 @@ class ZestyioAPIWrapper {
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
       scriptsGETAll: '/web/scripts',
+      scriptsGET: '/web/scripts/SCRIPT_ZUID',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID'
     }
@@ -259,6 +260,15 @@ class ZestyioAPIWrapper {
 
   async getScripts() {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll))
+  }
+
+  async getScript(scriptZUID) {
+    const scriptURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
+      { SCRIPT_ZUID: scriptZUID }
+    )
+
+    return await this.getRequest(scriptURL)
   }
 
   async saveScript(scriptZUID, payload) {
