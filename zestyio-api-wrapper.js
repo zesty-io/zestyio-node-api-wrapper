@@ -6,7 +6,9 @@ class ZestyioAPIWrapper {
   
     this.instancesAPIEndpoints = {
       modelsGETAll: '/content/models',
+      modelsGET: '/content/models/MODEL_ZUID',
       fieldsGETAll: '/content/models/MODEL_ZUID/fields',
+      fieldGET: '/content/models/MODEL_ZUID/fields/FIELD_ZUID',
       itemsGETAll: '/content/models/MODEL_ZUID/items',
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
@@ -21,9 +23,11 @@ class ZestyioAPIWrapper {
       viewsPUTPUBLISH: '/web/views/VIEW_ZUID?publish=true',
       settingsGETAll: '/env/settings',
       stylesheetsGETAll: '/web/stylesheets',
+      stylesheetsGET: '/web/stylesheets/STYLESHEET_ZUID',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
       scriptsGETAll: '/web/scripts',
+      scriptsGET: '/web/scripts/SCRIPT_ZUID',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID'
     }
@@ -120,6 +124,17 @@ class ZestyioAPIWrapper {
     return await this.getRequest(modelsURL)
   }
 
+  async getModel(modelZUID) {
+    const modelURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.modelsGET,
+        { MODEL_ZUID: modelZUID }
+      )
+    )
+
+    return await this.getRequest(modelURL)
+  }
+
   async getFields(modelZUID) {
     const fieldsURL = this.buildAPIURL(
       this.replaceInURL(
@@ -129,6 +144,20 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(fieldsURL)
+  }
+
+  async getField(modelZUID, fieldZUID) {
+    const fieldURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.fieldGET,
+        {
+          MODEL_ZUID: modelZUID,
+          FIELD_ZUID: fieldZUID
+        }
+      )
+    )
+
+    return await this.getRequest(fieldURL)
   }
 
   async getItem(modelZUID, itemZUID) {
@@ -203,6 +232,19 @@ class ZestyioAPIWrapper {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsGETAll))
   }
 
+  async getView(viewZUID) {
+    const viewGetURL = this.replaceInURL(
+      this.buildAPIURL(
+        this.replaceInURL(
+          this.instancesAPIEndpoints.viewsGET,
+          { VIEW_ZUID: viewZUID }
+        )
+      )
+    )
+
+    return await this.getRequest(viewGetURL)
+  }
+
   async saveView(viewZUID, payload) {
     const viewPutURL = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
@@ -220,6 +262,15 @@ class ZestyioAPIWrapper {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll))
   }
 
+  async getScript(scriptZUID) {
+    const scriptURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
+      { SCRIPT_ZUID: scriptZUID }
+    )
+
+    return await this.getRequest(scriptURL)
+  }
+
   async saveScript(scriptZUID, payload) {
     const scriptPutURL = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUT),
@@ -235,6 +286,15 @@ class ZestyioAPIWrapper {
 
   async getStylesheets() {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETAll))
+  }
+
+  async getStylesheet(stylesheetZUID) {
+    const stylesheetURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGET),
+      { STYLESHEET_ZUID: stylesheetZUID }
+    )
+
+    return await this.getRequest(stylesheetURL)
   }
 
   async saveStylesheet(stylesheetZUID, payload) {
