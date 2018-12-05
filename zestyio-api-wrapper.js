@@ -13,21 +13,29 @@ class ZestyioAPIWrapper {
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
       itemsGETPublishings: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings',
+      /* TODO TEST */ itemsGETPublishing: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings/PUBLISHING_ZUID',
       itemsGETVersions: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions',
       itemsGETVersion: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions/VERSION_NUMBER',
       itemsPUT: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
       viewsGETAll: '/web/views',
       viewsGET: '/web/views/VIEW_ZUID',
+      /* TODO TEST */ viewsGETVersions: '/web/views/VIEW_ZUID/versions',
+      /* TODO TEST */ viewsGETVersion: '/web/views/VIEW_ZUID/versions/VERSION_NUMBER',
       viewsPOST: '/web/views',
       viewsPUT: '/web/views/VIEW_ZUID',
-      viewsPUTPUBLISH: '/web/views/VIEW_ZUID?publish=true',
+      /* TODO TEST */ viewsPUTPublish: '/web/views/VIEW_ZUID?publish=true',
       settingsGETAll: '/env/settings',
+      /* TODO TEST */ settingsGET: '/env/settings/SETTINGS_ID',
       stylesheetsGETAll: '/web/stylesheets',
       stylesheetsGET: '/web/stylesheets/STYLESHEET_ZUID',
+      /* TODO TEST */ stylesheetsGETVersions: '/web/stylesheets/STYLESHEET_ZUID/versions',
+      /* TODO TEST */ stylesheetsGETVersion: '/web/stylesheets/STYLESHEET_ZUID/versions/VERSION_NUMBER',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
       scriptsGETAll: '/web/scripts',
       scriptsGET: '/web/scripts/SCRIPT_ZUID',
+      /* TODO TEST */ scriptsGETVersions: '/web/scripts/SCRIPT_ZUID/versions',
+      /* TODO TEST */ scriptsGETVersion: '/web/scripts/SCRIPT_ZUID/versions/VERSION_NUMBER',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID'
     }
@@ -188,6 +196,21 @@ class ZestyioAPIWrapper {
     return await this.getRequest(itemPublishingsURL)
   }
 
+  async getItemPublishing(modelZUID, itemZUID, publishingZUID) {
+    const itemPublishingURL = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsGETPublishings,
+        {
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID,
+          PUBLISHING_ZUID: publishingZUID
+        }
+      )
+    )
+
+    return await this.getRequest(itemPublishingURL)
+  }
+
   async getItems(modelZUID) {
     const itemsURL = this.buildAPIURL(
       this.replaceInURL(
@@ -245,6 +268,35 @@ class ZestyioAPIWrapper {
     return await this.getRequest(viewGetURL)
   }
 
+  async getViewVersions(viewZUID) {
+    const viewGetURL = this.replaceInURL(
+      this.buildAPIURL(
+        this.replaceInURL(
+          this.instancesAPIEndpoints.viewsGETVersions,
+          { VIEW_ZUID: viewZUID }
+        )
+      )
+    )
+
+    return await this.getRequest(viewGetURL)
+  }
+
+  async getViewVersion(viewZUID, versionNumber) {
+    const viewGetVersionURL = this.replaceInURL(
+      this.buildAPIURL(
+        this.replaceInURL(
+          this.instancesAPIEndpoints.viewsGETVersion,
+          { 
+            VIEW_ZUID: viewZUID,
+            VERSION_NUMBER: versionNumber
+          }
+        )
+      )
+    )
+
+    return await this.getRequest(viewGetVersionURL)
+  }
+
   async saveView(viewZUID, payload) {
     const viewPutURL = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
@@ -252,6 +304,15 @@ class ZestyioAPIWrapper {
     )
 
     return await this.putRequest(viewPutURL, payload)
+  }
+
+  async saveAndPublishView(viewZUID, payload) {
+    const viewPutPublishURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.viewsPUTPublish),
+      { VIEW_ZUID: viewZUID }
+    )
+
+    return await this.putRequest(viewPutPublishURL, payload)
   }
 
   async createView(payload) {
@@ -270,6 +331,36 @@ class ZestyioAPIWrapper {
 
     return await this.getRequest(scriptURL)
   }
+
+  async getScript(scriptZUID) {
+    const scriptURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
+      { SCRIPT_ZUID: scriptZUID }
+    )
+
+    return await this.getRequest(scriptURL)
+  }
+
+  async getScriptVersions(scriptZUID) {
+    const scriptVersionsURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETVersions),
+      { SCRIPT_ZUID: scriptZUID }
+    )
+
+    return await this.getRequest(scriptVersionsURL)
+  }
+
+  async getScriptVersion(scriptZUID, versionNumber) {
+    const scriptVersionURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETVersion),
+      { 
+        SCRIPT_ZUID: scriptZUID,
+        VERSION_NUMBER: versionNumber
+      }
+    )
+
+    return await this.getRequest(scriptVersionURL)
+  }  
 
   async saveScript(scriptZUID, payload) {
     const scriptPutURL = this.replaceInURL(
@@ -295,6 +386,27 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(stylesheetURL)
+  }
+
+  async getStylesheetVersions(stylesheetZUID) {
+    const stylesheetVersionsURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersions),
+      { STYLESHEET_ZUID: stylesheetZUID }
+    )
+
+    return await this.getRequest(stylesheetVersionsURL)
+  }
+
+  async getStylesheetVersion(stylesheetZUID, versionNumber) {
+    const stylesheetVersionURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersion),
+      { 
+        STYLESHEET_ZUID: stylesheetZUID,
+        VERSION_NUMBER: versionNumber
+      }
+    )
+
+    return await this.getRequest(stylesheetVersionURL)
   }
 
   async saveStylesheet(stylesheetZUID, payload) {
@@ -330,6 +442,15 @@ class ZestyioAPIWrapper {
 
   async getSettings() {
     return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.settingsGETAll))
+  }
+
+  async getSetting(settingsId) {
+    const settingURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.settingsGET),
+      { SETTINGS_ID: settingsId }
+    )
+
+    return await this.getRequest(settingURL)
   }
 
   // Media API functions
