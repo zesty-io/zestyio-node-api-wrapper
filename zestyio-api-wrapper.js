@@ -38,7 +38,7 @@ class ZestyioAPIWrapper {
       /* TODO TEST */ scriptsGETVersion: '/web/scripts/SCRIPT_ZUID/versions/VERSION_NUMBER',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID',
-      /* TODO TEST */ siteHeadGET: '/web/sitehead'
+      siteHeadGET: '/web/headers'
     }
   
     this.accountsAPIEndpoints = {
@@ -434,8 +434,8 @@ class ZestyioAPIWrapper {
   
   async getSiteHead() {
     const siteHeadGetURL = this.buildAPIURL(this.instancesAPIEndpoints.siteHeadGET)
-
-    return await this.request(siteHeadGetURL)
+    console.log(siteHeadGetURL)
+    return await this.getRequest(siteHeadGetURL)
   }
 
   async getInstanceUsers() {
