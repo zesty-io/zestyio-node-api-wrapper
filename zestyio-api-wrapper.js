@@ -13,32 +13,34 @@ class ZestyioAPIWrapper {
       itemsPOST: '/content/models/MODEL_ZUID/items',
       itemsGET: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
       itemsGETPublishings: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings',
-      /* TODO TEST */ itemsGETPublishing: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings/PUBLISHING_ZUID',
+      itemsGETPublishing: '/content/models/MODEL_ZUID/items/ITEM_ZUID/publishings/PUBLISHING_ZUID',
       itemsGETVersions: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions',
       itemsGETVersion: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions/VERSION_NUMBER',
       itemsPUT: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
       viewsGETAll: '/web/views',
       viewsGET: '/web/views/VIEW_ZUID',
-      /* TODO TEST */ viewsGETVersions: '/web/views/VIEW_ZUID/versions',
-      /* TODO TEST */ viewsGETVersion: '/web/views/VIEW_ZUID/versions/VERSION_NUMBER',
+      viewsGETVersions: '/web/views/VIEW_ZUID/versions',
+      viewsGETVersion: '/web/views/VIEW_ZUID/versions/VERSION_NUMBER',
       viewsPOST: '/web/views',
       viewsPUT: '/web/views/VIEW_ZUID',
-      /* TODO TEST */ viewsPUTPublish: '/web/views/VIEW_ZUID?publish=true',
+      viewsPUTPublish: '/web/views/VIEW_ZUID?publish=true',
       settingsGETAll: '/env/settings',
-      /* TODO TEST */ settingsGET: '/env/settings/SETTINGS_ID',
+      settingsGET: '/env/settings/SETTINGS_ID',
       stylesheetsGETAll: '/web/stylesheets',
       stylesheetsGET: '/web/stylesheets/STYLESHEET_ZUID',
-      /* TODO TEST */ stylesheetsGETVersions: '/web/stylesheets/STYLESHEET_ZUID/versions',
-      /* TODO TEST */ stylesheetsGETVersion: '/web/stylesheets/STYLESHEET_ZUID/versions/VERSION_NUMBER',
+      stylesheetsGETVersions: '/web/stylesheets/STYLESHEET_ZUID/versions',
+      stylesheetsGETVersion: '/web/stylesheets/STYLESHEET_ZUID/versions/VERSION_NUMBER',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
       scriptsGETAll: '/web/scripts',
       scriptsGET: '/web/scripts/SCRIPT_ZUID',
-      /* TODO TEST */ scriptsGETVersions: '/web/scripts/SCRIPT_ZUID/versions',
-      /* TODO TEST */ scriptsGETVersion: '/web/scripts/SCRIPT_ZUID/versions/VERSION_NUMBER',
+      scriptsGETVersions: '/web/scripts/SCRIPT_ZUID/versions',
+      scriptsGETVersion: '/web/scripts/SCRIPT_ZUID/versions/VERSION_NUMBER',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID',
-      siteHeadGET: '/web/headers'
+      siteHeadGET: '/web/headers',
+      navGET: '/env/nav',
+      searchGET: '/search/items?q=SEARCH_TERM'
     }
   
     this.accountsAPIEndpoints = {
@@ -200,7 +202,7 @@ class ZestyioAPIWrapper {
   async getItemPublishing(modelZUID, itemZUID, publishingZUID) {
     const itemPublishingURL = this.buildAPIURL(
       this.replaceInURL(
-        this.instancesAPIEndpoints.itemsGETPublishings,
+        this.instancesAPIEndpoints.itemsGETPublishing,
         {
           MODEL_ZUID: modelZUID,
           ITEM_ZUID: itemZUID,
@@ -434,8 +436,21 @@ class ZestyioAPIWrapper {
   
   async getSiteHead() {
     const siteHeadGetURL = this.buildAPIURL(this.instancesAPIEndpoints.siteHeadGET)
-    console.log(siteHeadGetURL)
     return await this.getRequest(siteHeadGetURL)
+  }
+
+  async getNav() {
+    const navGetURL = this.buildAPIURL(this.instancesAPIEndpoints.navGET)
+    return await this.getRequest(navGetURL)
+  }
+
+  async search(searchTerm) {
+    const searchURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.searchGET), 
+      { SEARCH_TERM: searchTerm }
+    )
+
+    return await this.getRequest(searchURL)
   }
 
   async getInstanceUsers() {
