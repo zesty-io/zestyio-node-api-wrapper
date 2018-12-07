@@ -523,7 +523,7 @@ class ZestyioAPIWrapper {
     return await this.getRequest(mediaBinAPIURL)
   }
 
-  async createMediaFile(binId, groupId, fileName, contentType, stream) {
+  async createMediaFile(binId, groupId, fileName, title, contentType, stream) {
     let bin = await this.getMediaBin(binId)
     bin = bin.data[0]
 
@@ -538,6 +538,7 @@ class ZestyioAPIWrapper {
     return await this.formPostRequest(mediaUploadURL, {
       bin_id: binId,
       group_id: groupId,
+      title: title,
       file: {
         value: stream,
         options: {
