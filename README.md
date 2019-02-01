@@ -14,7 +14,7 @@ npm install zestyio-api-wrapper
 
 Include this line at the top of your JavaScript project file:
 
-```
+```javascript
 const Zesty = require('zestyio-api-wrapper');
 ```
 
@@ -22,7 +22,7 @@ const Zesty = require('zestyio-api-wrapper');
 
 You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager: go to the "Editor" section, and click on the "External Editing" button to display the values for your Zesty.io instance.
 
-```
+```javascript
 const token = 'PRIVATE_TOKEN_FROM_ZESTYIO' // Keep in env file not in code
 const instanceZUID = '8-b0a6c2b192-xkgt38' // ZUID of the Zesty.io Cloud Content Instance on which to make requests
 
@@ -31,7 +31,7 @@ const zesty = new Zesty(instanceZUID, token)
 
 You can optionally enable API request and error logging by setting one or both of the `logErrors` and `logResponses` flags:
 
-```
+```javascript
 const zesty = new Zesty(
   instanceZUID,
   token,
@@ -42,7 +42,7 @@ const zesty = new Zesty(
 )
 ```
 
-## Making Calls
+## Usage
 
 ### Views
 
@@ -50,7 +50,7 @@ The wrapper allows CRUD on Zesty.io view files. See documentation [here](https:/
 
 Getting views returns a JSON array of view objects:
 
-```
+```javascript
 try {
   const res = await zesty.getViews()
 } catch(err) {
@@ -60,7 +60,7 @@ try {
 
 Creating a view (snippet):
 
-```
+```javascript
 const fileName = 'navigation-snippet'
 const code = 'my view content'
 const payload = {
@@ -77,7 +77,7 @@ try {
 
 Creating a view (endpoint):
 
-```
+```javascript
 const fileName = '/special-endpoint.json'
 const code = JSON.stringify({ foo: 'bar' })
 const payload = {
@@ -95,7 +95,7 @@ try {
 
 Saving a view, returns a JSON object:
 
-```
+```javascript
 const viewZUID = '11-dbe794-wx5ppr'
 const code = 'my view content'
 const payload = {
@@ -115,7 +115,7 @@ CRUD on Zesty.io script files. See documentation [here](https://instances-api.ze
 
 Getting scripts returns a JSON array of view objects:
 
-```
+```javascript
 try {
   const res = await zesty.getScripts()
 } catch(err) {
@@ -125,7 +125,7 @@ try {
 
 Creating a script:
 
-```
+```javascript
 const fileName = 'my-script.js'
 const code = "alert('hello world');"
 const payload = {
@@ -143,7 +143,7 @@ try {
 
 Saving a script, returns a JSON object:
 
-```
+```javascript
 const scriptZUID = '10-3568a8-79ml1q'
 const code = "alert('hello world');"
 const payload = {
@@ -157,13 +157,69 @@ try {
 }
 ```
 
+### Audit Trail
+
+Provides methods to retrieve and filter audit trail entries.  See documentation [here](https://instances-api.zesty.org/#026123c3-086e-42bd-9eda-86c2b5de33a2).
+
+Get all audit trail entries:
+
+```javascript
+try {
+  const res = await zesty.getAuditTrailEntries()
+} catch (err) {
+  console.log(err)
+}
+```
+
+Get a specific audit trail entry by its ZUID:
+
+```javascript
+const auditZUID = '15-...' // Audit trail entry ZUIDs begin with 15
+
+try {
+  const res = await zesty.getAuditTrailEntries(auditZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Get audit trail entries having specific properties:
+
+```javascript
+const filterProps = {
+  // Object keys can be:
+  // order
+  // dir
+  // start_date
+  // end_date
+  // limit
+  // page
+  // action
+  // affectedZUID
+  // userZUID
+  // See documentation for examples.
+}
+
+try {
+  res = await zesty.searchAuditTrailEntries({
+      limit: 5,
+      order: 'created',
+      dir: 'desc'
+  })
+} catch(err) {
+  console.log(err)
+}
+```
+
+Examples for each filtering parameter can be found in the [API documentation](https://instances-api.zesty.org/#026123c3-086e-42bd-9eda-86c2b5de33a2).
+
 ## Media Management Calls
 
 ### Media Bins
 
 Get all media bins:
 
-```
+```javascript
 try {
   const binsResponse = await zesty.getMediaBins()
   const firstBin = binsResponse.data[0]
@@ -175,7 +231,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Bin',
   status: 'OK',
@@ -195,7 +251,7 @@ Abbreviated response format:
 
 Get media bin by ID:
 
-```
+```javascript
 try {
   const binId = 'media bin ID'
   const binResponse = await zesty.getMediaBin(binId)
@@ -206,7 +262,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Bin',
   status: 'OK',
@@ -226,7 +282,7 @@ Update media bin by ID:
 
 (Allows for bin name to be updated).
 
-```
+```javascript
 const binId = 'media bin ID'
 
 try {
@@ -240,7 +296,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Bin <Bin ZUID> updated',
   status: 'OK',
@@ -258,7 +314,7 @@ Abbreviated response format:
 
 Get all media groups in a bin:
 
-```
+```javascript
 const binId = 'media bin ID'
 
 try {
@@ -270,7 +326,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Folder',
   status: 'OK',
@@ -289,7 +345,7 @@ Abbreviated response format:
 
 Get media group by ID:
 
-```
+```javascript
 const groupId = 'media group ID'
 
 try {
@@ -301,7 +357,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'group',
   status: 'OK',
@@ -335,7 +391,7 @@ Abbreviated response format:
 
 Create media group:
 
-```
+```javascript
 const binId = 'media bin ID'
 const groupId = 'parent group ID - optional'
 const name = 'new group name - optional defaults to new folder'
@@ -353,7 +409,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Created folder <Group Name>',
   status: 'OK',
@@ -372,7 +428,7 @@ Abbreviated response format:
 
 Update media group by ID:
 
-```
+```javascript
 const groupId = 'group ID to update'
 const parentGroupId = 'parent group ID - optional'
 const name = 'new group name - optional'
@@ -392,7 +448,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Updated group <Group Name>',
   status: 'OK',
@@ -409,7 +465,7 @@ Abbreviated response format:
 
 Delete media group by ID:
 
-```
+```javascript
 const groupId = 'group ID to delete'
 
 try {
@@ -421,7 +477,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Deleted group <Group ZUID>',
   status: 'OK',
@@ -433,7 +489,7 @@ Abbreviated response format:
 
 Get all media files in a bin:
 
-```
+```javascript
 const binId = 'media bin ID'
 
 try {
@@ -445,7 +501,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Group',
   status: 'OK',
@@ -470,7 +526,7 @@ Abbreviated response format:
 
 Get media file by ID:
 
-```
+```javascript
 const fileId = 'media file ID'
 
 try {
@@ -482,7 +538,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Files',
   status: 'OK',
@@ -506,7 +562,7 @@ Abbreviated response format:
 
 Create (upload) media file:
 
-```
+```javascript
 const fs = require('fs')
 const fileName = 'test.jpg'
 const stream = fs.createReadStream(`/path/to/${fileName}`)
@@ -531,7 +587,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'File uploaded',
   status: 'Created',
@@ -554,7 +610,7 @@ Update media file by ID:
 
 (Allows ability to change file name, display title, group that the file is in).
 
-```
+```javascript
 const fileId = 'media file ID'
 const newName = 'newname.jpg - optional'
 const newTitle = 'New Title - optional'
@@ -576,7 +632,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: 'Updated file <File Name>',
   status: 'OK',
@@ -595,7 +651,7 @@ Abbreviated response format:
 
 Delete media file by ID:
 
-```
+```javascript
 const fileId = 'media file ID'
 
 try {
@@ -607,7 +663,7 @@ try {
 
 Abbreviated response format:
 
-```
+```javascript
 { 
   message: '1 files deleted and purging',
   status: 'OK',
