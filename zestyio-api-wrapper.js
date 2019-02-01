@@ -41,6 +41,11 @@ class ZestyioAPIWrapper {
       siteHeadGET: '/web/headers',
       navGET: '/env/nav',
       searchGET: '/search/items?q=SEARCH_TERM',
+      headTagsGETAll: '/web/headtags',
+      headTagsGET: '/web/headtags/HEADTAG_ZUID',
+      headTagsDELETE: '/web/headtags/HEADTAG_ZUID',
+      headTagsPUT: '/web/headtags/HEADTAG_ZUID',
+      headTagsPOST: '/web/headtags',
       auditsGETAll: '/env/audits',
       auditsGET: '/env/audits/AUDIT_ZUID',
       auditsGETParams: '/env/audits?AUDIT_SEARCH_PARAMS'
@@ -476,6 +481,45 @@ class ZestyioAPIWrapper {
     )
 
     return await this.getRequest(settingURL)
+  }
+
+  async createHeadTag(tag) {
+    const headTagURL = this.buildAPIURL(this.instancesAPIEndpoints.headTagsPOST)
+
+    return await this.postRequest(headTagURL, tag)
+  }
+
+  async saveHeadTag(headTagZUID, tag) {
+    const headTagURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.headTagsPUT),
+      { HEADTAG_ZUID: headTagZUID }
+    )
+
+    return await this.putRequest(headTagURL, tag)
+  }
+
+  async getHeadTags() {
+    const headTagURL = this.buildAPIURL(this.instancesAPIEndpoints.headTagsGETAll)
+
+    return await this.getRequest(headTagURL)
+  }
+
+  async getHeadTag(headTagZUID) {
+    const headTagURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.headTagsGET),
+      { HEADTAG_ZUID: headTagZUID }
+    )
+
+    return this.getRequest(headTagURL)
+  }
+
+  async deleteHeadTag(headTagZUID) {
+    const headTagURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.headTagsDELETE),
+      { HEADTAG_ZUID: headTagZUID }
+    )
+
+    return this.deleteRequest(headTagURL)
   }
 
   async getAuditTrailEntries() {

@@ -157,6 +157,118 @@ try {
 }
 ```
 
+### Head Tags
+
+CRUD on `<head>` tags (for example meta tags, stylesheet `link` tags, `script` tags that go in the head area of an HTML document).  Allows setting of tags at a per item (refered to as Resource ZUID in the documentation) level.  See documentation [here](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e).
+
+Get all head tags:
+
+```javascript
+try {
+  const res = await zesty.getHeadTags()
+} catch (err) {
+  console.log(err)
+}
+```
+
+Get a single head tag by ZUID:
+
+```javascript
+const headTagZUID = `21-...` // Head Tag ZUIDs begin with 21
+
+try {
+  const res = await zesty.getHeadTag(headTagZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Create a head tag:
+
+See the [documentation](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e) for the full range of options.
+
+```javascript
+const resourceZUID = '7-...' // A content item
+
+try {
+  // Create a script tag to load a script only when rendering the view for the
+  // content item whose ZUID is in resourceZUID
+
+  let res = await zesty.createHeadTag({
+    type: 'script',
+    attributes: {
+      src: 'https://mydomain.com/libs/library.js'
+    },
+    resourceZUID: resourceZUID
+  })  
+
+  // Create a meta 'generator' tag added in the head only when rendering the
+  // view for the content item whose ZUID is in resourceZUID
+
+  res = await zesty.createHeadTag({
+    type: 'meta',
+    attributes: {
+      generator: 'This is a test'
+    },
+    resourceZUID: resourceZUID
+  })  
+
+  // Create a 'link' tag to load a CSS file from a specified URL only when 
+  // rendering the view for the content item whose ZUID is in resourceZUID.
+
+  res = await zesty.createHeadTag({
+    type: 'link',
+    attributes: {
+      rel: 'stylesheet',
+      href: 'https://mydomain.com/css/mystylesheet.css'
+    },
+    resourceZUID: resourceZUID
+  })
+} catch (err) {
+  console.log(err)
+}
+```
+
+Update an existing head tag by ZUID:
+
+See the [documentation](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e) for the full range of options.
+
+```javascript
+const headTagZUID = `21-...` // Head Tag ZUIDs begin with 21
+const resourceZUID = '7-...' // A content item
+
+// Update an existing head tag to be a script loaded from its URL only 
+// when rendering the view for the content item whose ZUID is in resourceZUID.
+
+try {
+  const res = await zesty.saveHeadTag(
+    headTagZuid,
+    {
+      type: 'script',
+      attributes: {
+        src: 'https://mydomain.com/libs/another-library.js'
+      },
+      resourceZUID: resourceZUID
+    }
+  )
+} catch (err) {
+  console.log(err)
+}
+
+```
+
+Delete a single head tag by ZUID:
+
+```javascript
+const headTagZUID = `21-...` // Head Tag ZUIDs begin with 21
+
+try {
+  const res = await zesty.deleteHeadTag(headTagZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Audit Trail
 
 Provides methods to retrieve and filter audit trail entries.  See documentation [here](https://instances-api.zesty.org/#026123c3-086e-42bd-9eda-86c2b5de33a2).
