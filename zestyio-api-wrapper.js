@@ -45,7 +45,10 @@ class ZestyioAPIWrapper {
       headTagsGET: '/web/headtags/HEADTAG_ZUID',
       headTagsDELETE: '/web/headtags/HEADTAG_ZUID',
       headTagsPUT: '/web/headtags/HEADTAG_ZUID',
-      headTagsPOST: '/web/headtags'
+      headTagsPOST: '/web/headtags',
+      auditsGETAll: '/env/audits',
+      auditsGET: '/env/audits/AUDIT_ZUID',
+      auditsGETParams: '/env/audits?AUDIT_SEARCH_PARAMS'
     }
   
     this.accountsAPIEndpoints = {
@@ -517,6 +520,50 @@ class ZestyioAPIWrapper {
     )
 
     return this.deleteRequest(headTagURL)
+  }
+
+  async getAuditTrailEntries() {
+    const auditURL = this.buildAPIURL(this.instancesAPIEndpoints.auditsGETAll)
+    return await this.getRequest(auditURL)
+  }
+
+  async getAuditTrailEntry(auditTrailEntryZUID) {
+    const auditURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.auditsGET),
+      { AUDIT_ZUID: auditTrailEntryZUID }
+    )
+
+    return await this.getRequest(auditURL)
+  }
+
+  async searchAuditTrailEntries(searchParams) {
+    // Object keys can be:
+    // order
+    // dir
+    // start_date
+    // end_date
+    // limit
+    // page
+    // action
+    // affectedZUID
+    // userZUID
+
+    let requestParams = ''
+
+    for (const paramName in searchParams) {
+      requestParams = `${requestParams}${paramName}=${searchParams[paramName]}&`
+    }
+
+    if (requestParams.endsWith('&')) {
+      requestParams = requestParams.substring(0, requestParams.length -1)
+    }
+    
+    const auditURL = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.auditsGETParams),
+      { AUDIT_SEARCH_PARAMS: requestParams }
+    )
+
+    return await this.getRequest(auditURL)
   }
 
   // Media API functions
