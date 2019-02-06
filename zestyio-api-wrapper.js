@@ -195,22 +195,27 @@ class ZestyioAPIWrapper {
 
   async saveItem(modelZUID, itemZUID, item) {
     const itemURL = this.buildAPIURL(
-      this.instancesAPIEndpoints.itemsPUT,
-      {
-        MODEL_ZUID: modelZUID,
-        ITEM_ZUID: itemZUID
-      }
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsPUT,
+        {
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID
+        }
+      )
     )
 
+    console.log(itemURL)
     return await this.putRequest(itemURL, item)
   }
 
   async createItem(modelZUID, item) {
     const itemURL = this.buildAPIURL(
-      this.instancesAPIEndpoints.itemsPOST,
-      {
-        MODEL_ZUID: modelZUID
-      }
+      this.replaceInURL(
+        this.instancesAPIEndpoints.itemsPOST,
+        {
+          MODEL_ZUID: modelZUID
+        }
+      )
     )
 
     return await this.postRequest(itemURL, item)
