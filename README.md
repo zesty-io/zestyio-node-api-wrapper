@@ -46,7 +46,7 @@ const zesty = new Zesty(
 
 ### Response Object Format
 
-Responses from the API will generally be delivered as objects which have the following form:
+Responses from the API will generally be delivered as objects having the following form:
 
 ```
 { _meta:
@@ -60,6 +60,18 @@ Responses from the API will generally be delivered as objects which have the fol
 ```
 
 The content of `data` will be either an object (for endpoints that return one item) or an array containing zero or more objects (endpoints that can return multiple items will return an array regardless of how many items match the query).
+
+
+### Error Response Format
+
+Responses for error cases will generally be delivered as objects having the following form:
+
+```
+{ reason: 'Textual description', 
+  statusCode: 401, // HTTP response code from API, 400, 401, 500 etc
+  error: // null or string or object with error detail
+}
+```
 
 ### Content Models and Fields
 

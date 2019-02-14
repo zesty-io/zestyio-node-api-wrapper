@@ -55,13 +55,16 @@ class ZestyioAPIWrapper {
       instanceGET: '/instances/INSTANCE_ZUID',
       instanceUsersGET: '/instances/INSTANCE_ZUID/users/roles'
     }
+
+    this.sitesServiceEndpoints = {
+      schedulePublishPOST: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule',
+      scheduleUnpublishPATCH: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule/ITEM_VERSION_ZUID'
+    }
   
     this.mediaAPIEndpoints = {
-      // binsPOST: '/media-manager-service/bin', // Not yet
       binsGETAll: '/media-manager-service/site/SITE_ID/bins',
       binsGET: '/media-manager-service/bin/BIN_ID',
       binsPATCH: '/media-manager-service/bin/BIN_ID',
-      // binsDELETE: '/media-manager-service/bin/BIN_ID', // Not yet
       filesPOST: '/media-storage-service/upload/STORAGE_DRIVER/STORAGE_NAME',
       filesGET: '/media-manager-service/file/FILE_ID',
       filesGETAll: '/media-manager-service/bin/BIN_ID/files',
@@ -77,12 +80,14 @@ class ZestyioAPIWrapper {
     this.instancesAPIURL = (options.hasOwnProperty('instancesAPIURL') ? options.instancesAPIURL : 'https://INSTANCE_ZUID.api.zesty.io/v1')
     this.accountsAPIURL = (options.hasOwnProperty('accountsAPIURL') ? options.accountsAPIURL : 'https://accounts.api.zesty.io/v1')
     this.mediaAPIURL = (options.hasOwnProperty('mediaAPIURL') ? options.mediaAPIURL : 'https://svc.zesty.io')
+    this.sitesServiceURL = (options.hasOwnProperty('sitesServiceURL') ? options.sitesServiceURL : 'https://svc.zesty.io/sites-service/INSTANCE_ZUID')
     this.logErrors = (options.hasOwnProperty('logErrors') ? options.logErrors : false)
     this.logResponses = (options.hasOwnProperty('logResponses') ? options.logResponses : false)
     
     this.instanceZUID = instanceZUID
     this.token = token
-    this.makeInstancesAPIURL()
+    this.instancesAPIURL = this.makeInstanceZUIDURL(this.instancesAPIURL, instanceZUID)
+    this.sitesServiceURL = this.makeInstanceZUIDURL(this.sitesServiceURL, instanceZUID)
   }
 
   logError(msg) {
@@ -98,11 +103,11 @@ class ZestyioAPIWrapper {
     }
   }
 
-  makeInstancesAPIURL() {
-    this.instancesAPIURL = this.replaceInURL(
-      this.instancesAPIURL,
-      { INSTANCE_ZUID:this.instanceZUID }
-    )
+  makeInstanceZUIDURL(url, zuid) {
+    return(this.replaceInURL(
+      url,
+      { INSTANCE_ZUID: zuid }
+    ))
   }
 
   buildAPIURL(uri, api = 'instances') {
@@ -111,6 +116,8 @@ class ZestyioAPIWrapper {
         return `${this.accountsAPIURL}${uri}`
       case 'instances':
         return `${this.instancesAPIURL}${uri}`
+      case 'sites-service':
+        return `${this.sitesServiceURL}${uri}`
       case 'media':
         return `${this.mediaAPIURL}${uri}`
       default:
@@ -219,6 +226,41 @@ class ZestyioAPIWrapper {
     )
 
     return await this.postRequest(itemURL, item)
+  }
+
+  async publishItem(itemZuid, publishSchedule) {
+    // TODO
+    // TODO if no publishSchedule then it is now...
+    // TODO how to deal with what version to go live?
+    const itemPublishURL = this.buildAPIURL(
+      this.replaceInURL(
+        sitesServiceEndpoints.schedulePublishPOST,
+        {
+          ITEM_ZUID: itemZuid
+        }
+      ),
+      'sites-service'  
+    )
+
+    return await this.postRequest(itemPublishURL, publishSchedule)
+  }
+
+  async unpublishItem(itemZUID, itemVersionZUID, publishSchedule) {
+    // TODO
+    // TODO if not publishSchedule then it is now...
+
+    const itemUnpublishURL = this.buildAPIURL(
+      this.replaceInURL(
+        sitesServiceEndpoints.scheduleUnpublishPATCH,
+        {
+          ITEM_ZUID: itemZUID,
+          ITEM_VERSION_ZUID: itemVersionZUID
+        }
+      ),
+      'sites-service'    
+    )
+
+    return await this.patchRequest(itemUnpublishURL, publishSchedule)
   }
 
   async getItemPublishings(modelZUID, itemZUID) {
@@ -739,150 +781,69 @@ class ZestyioAPIWrapper {
     return await this.deleteRequest(mediaBinAPIURL)
   }
 
-  async getRequest(url) {
+  async makeRequest(method, uri, successCode, payload, isFormPayload = false) {
     const $this = this
     return new Promise((resolve, reject) => {
-      request.get(url, {
+      const opts = {
+        method,
+        uri,
+        json: true,
         auth: {
           bearer: $this.token
         }
-      }, (error, response, body) => {
-        body = JSON.parse(body)
+      }
+
+      if (payload) {
+        if (isFormPayload) {
+          opts.formData = payload
+        } else {
+          opts.body = payload
+        }
+      }
+
+      request(opts, (error, response, body) => {
         this.logResponse(response)
 
-        if (!error && response.statusCode === 200) {
+        if (! error && response.statusCode === successCode) {
           resolve(body)
         } else {
           this.logError(error)
           reject({
-            reason: $this.defaultAccessError
+            reason: $this.defaultAccessError,
+            statusCode: response.statusCode,
+            error
           })
         }
       })
     })
   }
 
-  async deleteRequest(url) {
-    const $this = this
-    return new Promise((resolve, reject) => {
-      request.delete(url, {
-        auth: {
-          bearer: $this.token
-        }
-      }, (error, response, body) => {
-        body = JSON.parse(body)
-        this.logResponse(response)
+  async getRequest(url, successResult = 200) {
+    return this.makeRequest('GET', url, successResult)
+  }
 
-        if (!error && response.statusCode === 200) {
-          resolve(body)
-        } else {
-          this.logError(error)
-          reject({
-            reason: $this.defaultAccessError
-          })
-        }
-      })
-    })
+  async deleteRequest(url, successResult = 200) {
+    return this.makeRequest('DELETE', url, successResult)
   }  
 
-  async putRequest(url, payload) {
-    const $this = this
-      return new Promise((resolve, reject) => {
-      request.put({
-        url: url,
-        body: JSON.stringify(payload),
-        auth: {
-          bearer: $this.token
-        }
-      }, (error, response, body) => {
-        body = JSON.parse(body)
-        this.logResponse(response)
-        
-        if (!error && response.statusCode === 200) {
-          resolve(body)
-        } else {
-          this.logError(error)
-          reject({
-            reason: $this.defaultAccessError
-          })
-        }
-      })
-    })
+  async putRequest(url, payload, successResult = 200) {
+    return this.makeRequest('PUT', url, successResult, payload)
   }
 
-  async postRequest(url, payload) {
-    const $this = this
-    return new Promise((resolve, reject) => {
-      request.post({
-        url : url,
-        body: JSON.stringify(payload),
-        auth: {
-          bearer: $this.token
-        }
-      }, (error, response, body) => {
-        this.logResponse(response)
-        body = JSON.parse(body)
-
-        if (!error && response.statusCode === 201) {
-          resolve(body)
-        } else {
-          this.logError(error)
-          reject({
-            reason: $this.defaultAccessError
-          })
-        }
-      })
-    })
+  async postRequest(url, payload, successResult = 201) {
+    return this.makeRequest('POST', url, successResult, payload)
   }
 
-  async formPostRequest(url, payload) {
-    const $this = this
-    return new Promise((resolve, reject) => {
-      request.post({
-        url : url,
-        auth: {
-          bearer: $this.token
-        },
-        formData: payload
-      }, (error, response, body) => {
-        this.logResponse(response)
-        body = JSON.parse(body)
-
-        if (!error && response.statusCode === 201) {
-          resolve(body)
-        } else {
-          this.logError(error)
-          reject({
-            reason: $this.defaultAccessError
-          })
-        }
-      })
-    })
+  async patchRequest(url, payload, successResult = 200) {
+    return this.makeRequest('PATCH', url, successResult, payload)
   }
 
-  async formPatchRequest(url, payload) {
-    const $this = this
-    return new Promise((resolve, reject) => {
-      request.patch({
-        url : url,
-        auth: {
-          bearer: $this.token
-        },
-        formData: payload
-      }, (error, response, body) => {
-        this.logResponse(response)
-        body = JSON.parse(body)
+  async formPostRequest(url, payload, successResult = 201) {
+    return this.makeRequest('POST', url, successResult, payload, true)
+  }
 
-        if (!error && response.statusCode === 200) {
-          resolve(body)
-        } else {
-          this.logError(error)
-          reject({
-            reason: $this.defaultAccessError
-          })
-        }
-      })
-    })
+  async formPatchRequest(url, payload, successResult = 200) {
+    return this.makeRequest('PATCH', url, successResult, payload, true)
   }
 }
 
