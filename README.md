@@ -96,6 +96,89 @@ try {
 }
 ```
 
+### Content Items
+
+Content items are always accessed relative to their model, so a model ZUID is required for each call.  See the documentation [here](https://instances-api.zesty.org/#74adb209-9eea-0561-e98b-75a2a1b9882b).
+
+**Get all content items for a model:**
+
+```javascript
+try {
+  const modelZUID = '6-...' // Model ZUIDs begin with 6
+  const res = await zesty.getItems(modelZUID)
+  console.log(res)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...' // Item ZUIDs begin with 7
+  const res = await zesty.getItem(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Create a content item:**
+
+```javascript
+TODO
+```
+
+**Save a content item:**
+
+```javascript
+TODO
+```
+
+**Get all versions for a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemVersions(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a specific version of a content item by version ZUID:**
+
+```javascript
+TODO
+```
+
+**Get all publishing records for a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemPublishings(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get specific publishing record by publishing ZUID for a content item:**
+
+```javascript
+try {
+  const modelZUID = '6-3029e8-x4cbhh'
+  const itemZUID = '7-9cd6d2cdf9-spmszq'
+  const publishingZUID = '18-7c02d25-rpzw1v' // Publishing ZUIDs begin with 18
+  const res = await zesty.getItemPublishing(modelZUID, itemZUID, publishingZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Views
 
 The wrapper allows CRUD on Zesty.io view files. See documentation [here](https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833):
