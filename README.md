@@ -44,6 +44,58 @@ const zesty = new Zesty(
 
 ## Usage
 
+### Content Models and Fields
+
+Retrieval of content models and model fields.  See documentation:
+
+* [Content Models](https://instances-api.zesty.org/#5f8c1a85-1775-f67b-c5e0-a061f69e7ddb)
+* [Fields](https://instances-api.zesty.org/#689c935d-a46c-8eef-cf20-df60f55c38d3)
+
+**Get all content models:**
+
+```javascript
+try {
+  const res = await zesty.getModels()
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a content model by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...' // Model ZUIDs begin with 6
+  const res = await zesty.getModel(modelZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all fields for a content model:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const res = await zesty.getFields(modelZUID)
+} catch (err) {
+  console.log(err)
+}
+
+```
+
+**Get a specific field by field ZUID for a content model:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const fieldZUID = '12-...' // Field ZUIDs begin 12
+  const res = await zesty.getField(modelZUID, fieldZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Views
 
 The wrapper allows CRUD on Zesty.io view files. See documentation [here](https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833):
