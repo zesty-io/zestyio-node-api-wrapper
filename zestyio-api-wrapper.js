@@ -58,7 +58,7 @@ class ZestyioAPIWrapper {
 
     this.sitesServiceEndpoints = {
       schedulePublishPOST: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule',
-      scheduleUnpublishPATCH: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule/ITEM_VERSION_ZUID'
+      scheduleUnpublishPATCH: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule/PUBLISHING_ZUID'
     }
   
     this.mediaAPIEndpoints = {
@@ -245,7 +245,7 @@ class ZestyioAPIWrapper {
     return await this.postRequest(itemPublishURL, publishSchedule)
   }
 
-  async unpublishItem(itemZUID, itemVersionZUID, publishSchedule) {
+  async unpublishItem(itemZUID, publishingZUID, publishSchedule) {
     // TODO
     // TODO if not publishSchedule then it is now...
 
@@ -254,7 +254,7 @@ class ZestyioAPIWrapper {
         sitesServiceEndpoints.scheduleUnpublishPATCH,
         {
           ITEM_ZUID: itemZUID,
-          ITEM_VERSION_ZUID: itemVersionZUID
+          PUBLISHING_ZUID: publishingZUID
         }
       ),
       'sites-service'    
