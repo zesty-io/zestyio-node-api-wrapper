@@ -44,6 +44,23 @@ const zesty = new Zesty(
 
 ## Usage
 
+### Response Object Format
+
+Responses from the API will generally be delivered as objects which have the following form:
+
+```
+{ _meta:
+   { timestamp: '2019-02-14T18:42:19.279094718Z',
+     totalResults: 1,
+     start: 0,
+     offset: 0,
+     limit: 1 },
+  data: // Object or array of objects.
+}
+```
+
+The content of `data` will be either an object (for endpoints that return one item) or an array containing zero or more objects (endpoints that can return multiple items will return an array regardless of how many items match the query).
+
 ### Content Models and Fields
 
 Retrieval of content models and model fields.  See documentation:
@@ -127,13 +144,51 @@ try {
 **Create a content item:**
 
 ```javascript
-TODO
+try {
+  const modelZUID = '6-...'
+  const res = await zesty.createItem(modelZUID, {
+      data: { // Values here will depent on content model
+          text_field_one: 'hello', 
+          text_field_two: 'world'
+      },
+      meta: {
+          createdByUserZUID: '5-...', // User ZUIDs begin with 5
+          contentModelZUID: modelZUID
+      },
+      web: {
+        canonicalTagMode: 1,
+        metaDescription: 'This is the description.',
+        metaKeywords: 'these,are,some,keywords',
+        metaLinkText: 'This is the meta link text.',
+        metaTitle: 'This is the meta title.'
+      }
+  })
+} catch (err) {
+  console.log(err)
+}
 ```
+
+This will return the ZUID of the created item in the response.
 
 **Save a content item:**
 
 ```javascript
-TODO
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+
+  const res = await zesty.saveItem(modelZUID, itemZUID, {
+      data: {
+          text_field_one: 'updated',
+          text_field_two: 'item'
+      },
+      meta: {
+          masterZUID: itemZUID
+      }
+  })
+} catch (err) {
+  console.log(err)
+}
 ```
 
 **Get all versions for a specific content item by ZUID:**
@@ -151,7 +206,13 @@ try {
 **Get a specific version of a content item by version ZUID:**
 
 ```javascript
-TODO
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemVersion(modelZUID, itemZUID, 2)
+} catch (err) {
+  console.log(err)
+}
 ```
 
 **Get all publishing records for a specific content item by ZUID:**
