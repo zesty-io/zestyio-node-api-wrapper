@@ -40,7 +40,7 @@ class ZestyioAPIWrapper {
       scriptsPUT: '/web/scripts/SCRIPT_ZUID',
       siteHeadGET: '/web/headers',
       navGET: '/env/nav',
-      searchGET: '/search/items?q=SEARCH_TERM',
+      searchGET: '/search/items?q=SEARCH_TERM', // Undocumented
       headTagsGETAll: '/web/headtags',
       headTagsGET: '/web/headtags/HEADTAG_ZUID',
       headTagsDELETE: '/web/headtags/HEADTAG_ZUID',

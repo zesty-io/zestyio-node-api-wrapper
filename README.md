@@ -15,12 +15,12 @@ npm install zestyio-api-wrapper
 Include this line at the top of your JavaScript project file:
 
 ```javascript
-const Zesty = require('zestyio-api-wrapper');
+const Zesty = require('zestyio-api-wrapper')
 ```
 
 ## Instantiation
 
-You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager: go to the "Editor" section, and click on the "External Editing" button to display the values for your Zesty.io instance.
+You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager.  Go to the "Editor" section, and click on the "External Editing" button to display the values for your Zesty.io instance.
 
 ```javascript
 const token = 'PRIVATE_TOKEN_FROM_ZESTYIO' // Keep in env file not in code
@@ -44,11 +44,209 @@ const zesty = new Zesty(
 
 ## Usage
 
+### Response Object Format
+
+Responses from the API will generally be delivered as objects which have the following form:
+
+```
+{ _meta:
+   { timestamp: '2019-02-14T18:42:19.279094718Z',
+     totalResults: 1,
+     start: 0,
+     offset: 0,
+     limit: 1 },
+  data: // Object or array of objects.
+}
+```
+
+The content of `data` will be either an object (for endpoints that return one item) or an array containing zero or more objects (endpoints that can return multiple items will return an array regardless of how many items match the query).
+
+### Content Models and Fields
+
+Retrieval of content models and model fields.  See documentation:
+
+* [Content Models](https://instances-api.zesty.org/#5f8c1a85-1775-f67b-c5e0-a061f69e7ddb)
+* [Fields](https://instances-api.zesty.org/#689c935d-a46c-8eef-cf20-df60f55c38d3)
+
+**Get all content models:**
+
+```javascript
+try {
+  const res = await zesty.getModels()
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a content model by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...' // Model ZUIDs begin with 6
+  const res = await zesty.getModel(modelZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all fields for a content model:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const res = await zesty.getFields(modelZUID)
+} catch (err) {
+  console.log(err)
+}
+
+```
+
+**Get a specific field by field ZUID for a content model:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const fieldZUID = '12-...' // Field ZUIDs begin 12
+  const res = await zesty.getField(modelZUID, fieldZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+### Content Items
+
+Content items are always accessed relative to their model, so a model ZUID is required for each call.  See the documentation [here](https://instances-api.zesty.org/#74adb209-9eea-0561-e98b-75a2a1b9882b).
+
+**Get all content items for a model:**
+
+```javascript
+try {
+  const modelZUID = '6-...' // Model ZUIDs begin with 6
+  const res = await zesty.getItems(modelZUID)
+  console.log(res)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...' // Item ZUIDs begin with 7
+  const res = await zesty.getItem(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Create a content item:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const res = await zesty.createItem(modelZUID, {
+      data: { // Values here will depent on content model
+          text_field_one: 'hello', 
+          text_field_two: 'world'
+      },
+      meta: {
+          createdByUserZUID: '5-...', // User ZUIDs begin with 5
+          contentModelZUID: modelZUID
+      },
+      web: {
+        canonicalTagMode: 1,
+        metaDescription: 'This is the description.',
+        metaKeywords: 'these,are,some,keywords',
+        metaLinkText: 'This is the meta link text.',
+        metaTitle: 'This is the meta title.'
+      }
+  })
+} catch (err) {
+  console.log(err)
+}
+```
+
+This will return the ZUID of the created item in the response.
+
+**Save a content item:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+
+  const res = await zesty.saveItem(modelZUID, itemZUID, {
+      data: {
+          text_field_one: 'updated',
+          text_field_two: 'item'
+      },
+      meta: {
+          masterZUID: itemZUID
+      }
+  })
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all versions for a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemVersions(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get a specific version of a content item by version ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemVersion(modelZUID, itemZUID, 2)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all publishing records for a specific content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = await zesty.getItemPublishings(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get specific publishing record by publishing ZUID for a content item:**
+
+```javascript
+try {
+  const modelZUID = '6-3029e8-x4cbhh'
+  const itemZUID = '7-9cd6d2cdf9-spmszq'
+  const publishingZUID = '18-7c02d25-rpzw1v' // Publishing ZUIDs begin with 18
+  const res = await zesty.getItemPublishing(modelZUID, itemZUID, publishingZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Views
 
 The wrapper allows CRUD on Zesty.io view files. See documentation [here](https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833):
 
-Getting views returns a JSON array of view objects:
+**Get all views:**
+
+(returns an array of view objects)
 
 ```javascript
 try {
@@ -58,7 +256,18 @@ try {
 }
 ```
 
-Creating a view (snippet):
+**Get a view by ZUID:**
+
+```javascript
+try {
+  const viewZUID = '11=...' // View ZUIDS begin with 11
+  const res = await zesty.getView(viewZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Create a view (snippet):**
 
 ```javascript
 const fileName = 'navigation-snippet'
@@ -75,7 +284,7 @@ try {
 }
 ```
 
-Creating a view (endpoint):
+**Create a view (endpoint):**
 
 ```javascript
 const fileName = '/special-endpoint.json'
@@ -93,10 +302,12 @@ try {
 }
 ```
 
-Saving a view, returns a JSON object:
+**Save a view:**
+
+This will only save the updated view, and will not publish it.
 
 ```javascript
-const viewZUID = '11-dbe794-wx5ppr'
+const viewZUID = '11-...'
 const code = 'my view content'
 const payload = {
   code: code
@@ -109,11 +320,56 @@ try {
 }
 ```
 
+**Save and publish a view:**
+
+Both saves the updated view and publishes it.
+
+```javascript
+const viewZUID = '11-...'
+const code = 'my view content'
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveAndPublishView(viewZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all versions of a view:**
+
+```javascript
+const viewZUID = '11-...'
+
+try {
+  const res = await zesty.getViewVersions(viewZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Get a specific version of a view:**
+
+```javascript
+const viewZUID = '11-...'
+const viewVersionNumber = 2
+
+try {
+  const res = await zesty.getViewVersion(viewZUID, viewVersionNumber)
+} catch(err) {
+  console.log(err)
+}
+```
+
 ### Scripts
 
 CRUD on Zesty.io script files. See documentation [here](https://instances-api.zesty.org/#83f109ba-94a8-4647-8cb7-06f2bfe291a0).
 
-Getting scripts returns a JSON array of view objects:
+**Get all scripts:** 
+
+(returns an array of script objects).
 
 ```javascript
 try {
@@ -123,7 +379,18 @@ try {
 }
 ```
 
-Creating a script:
+**Get a script by ZUID:**
+
+```javascript
+try {
+  const scriptZUID = '10-...' // Script ZUIDs begin with 10
+  const res = await zesty.getScript(scriptZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Create a script:**
 
 ```javascript
 const fileName = 'my-script.js'
@@ -141,10 +408,12 @@ try {
 }
 ```
 
-Saving a script, returns a JSON object:
+**Save a script:**
+
+Change the contents of a script, while retaining the filename.
 
 ```javascript
-const scriptZUID = '10-3568a8-79ml1q'
+const scriptZUID = '10-...'
 const code = "alert('hello world');"
 const payload = {
   code: code
@@ -157,11 +426,120 @@ try {
 }
 ```
 
+**Get all versions of a script:**
+
+```javascript
+try {
+  const scriptZUID = '10-...'
+  const res = await zesty.getScriptVersions(scriptZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Get a specific version of a script:**
+
+```javascript
+try {
+  const scriptZUID = '10-...'
+  const versionNumber = 1
+  const res = await zesty.getScriptVersion(scriptZUID, versionNumber)
+} catch(err) {
+  console.log(err)
+}
+```
+
+### Stylesheets
+
+CRUD on Zesty.io stylesheet files. See documentation [here](https://instances-api.zesty.org/#f72b36b1-43cd-46cd-aae0-2e98cd9bbdda).
+
+**Get all stylesheets:**
+
+```javascript
+try {
+  const res = await zesty.getStylesheets()
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Get a stylesheet by ZUID:**
+
+```javascript
+try {
+  const stylesheetZUID = '10-...' // Stylesheet ZUIDs begin with 10
+  const res = await zesty.getStylesheet(stylesheetZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Create a stylesheet:**
+
+```javascript
+const fileName = 'styles.less'
+const code = ".myClass { text-align: left; }"
+const stylesheetType = 'text/less' // Can also use text/css or text/scss
+const payload = {
+  code: code,
+  fileName: fileName,
+  type: stylesheetType
+}
+
+try {
+  const res = await zesty.createScript(payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Save a stylesheet:**
+
+Change the contents of a stylesheet, while retaining the filename and file type.
+
+```javascript
+const stylesheetZUID = '10-...'
+const code = ".anotherClass { text-align: center; }"
+
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveStylesheet(stylesheetZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get all versions of a stylesheet:**
+
+```javascript
+try {
+  const stylesheetZUID = '10-...'
+  const res = await zesty.getStylesheetVersions(stylesheetZUID)
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Get a specific version of a stylesheet:**
+
+```javascript
+try {
+  const stylesheetZUID = '10-...'
+  const stylesheetVersion = 1
+  const res = await zesty.getStylesheetVersion(stylesheetZUID, stylesheetVersion)
+} catch(err) {
+  console.log(err)
+}
+```
+
 ### Head Tags
 
 CRUD on `<head>` tags (for example meta tags, stylesheet `link` tags, `script` tags that go in the head area of an HTML document).  Allows setting of tags at a per item (refered to as Resource ZUID in the documentation) level.  See documentation [here](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e).
 
-Get all head tags:
+**Get all head tags:**
 
 ```javascript
 try {
@@ -171,7 +549,7 @@ try {
 }
 ```
 
-Get a single head tag by ZUID:
+**Get a single head tag by ZUID:**
 
 ```javascript
 const headTagZUID = `21-...` // Head Tag ZUIDs begin with 21
@@ -183,7 +561,7 @@ try {
 }
 ```
 
-Create a head tag:
+**Create a head tag:**
 
 See the [documentation](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e) for the full range of options.
 
@@ -229,7 +607,7 @@ try {
 }
 ```
 
-Update an existing head tag by ZUID:
+**Update an existing head tag by ZUID:**
 
 See the [documentation](https://instances-api.zesty.org/#1eabcc23-03a1-4414-bba1-177228345c8e) for the full range of options.
 
@@ -257,13 +635,41 @@ try {
 
 ```
 
-Delete a single head tag by ZUID:
+**Delete a single head tag by ZUID:**
 
 ```javascript
 const headTagZUID = `21-...` // Head Tag ZUIDs begin with 21
 
 try {
+  const res = await zesty.getSiteHead()
+} catch (err) {
+  console.log(err)
+}
+```
+
+### Site Head Entries
+
+**Get all site head entries:**
+
+See API documentation [here](https://instances-api.zesty.org/#1b097314-1e85-450f-86f7-186f1a3f080f).
+
+```javascript
+try {
   const res = await zesty.deleteHeadTag(headTagZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+### Navigation Entries
+
+**Get all navigation entries:**
+
+Returns all items needed to build navigation for a management interface.  See the API documentation [here](https://instances-api.zesty.org/#b340777b-c900-4b5e-8455-82b9a10ac56a).
+
+```javascript
+try {
+  const res = await zesty.getNav()
 } catch (err) {
   console.log(err)
 }
@@ -273,7 +679,7 @@ try {
 
 Provides methods to retrieve and filter audit trail entries.  See documentation [here](https://instances-api.zesty.org/#026123c3-086e-42bd-9eda-86c2b5de33a2).
 
-Get all audit trail entries:
+**Get all audit trail entries:**
 
 ```javascript
 try {
@@ -283,7 +689,7 @@ try {
 }
 ```
 
-Get a specific audit trail entry by its ZUID:
+**Get a specific audit trail entry by ZUID:**
 
 ```javascript
 const auditZUID = '15-...' // Audit trail entry ZUIDs begin with 15
@@ -295,7 +701,7 @@ try {
 }
 ```
 
-Get audit trail entries having specific properties:
+**Get audit trail entries having specific properties:**
 
 ```javascript
 const filterProps = {
@@ -325,11 +731,34 @@ try {
 
 Examples for each filtering parameter can be found in the [API documentation](https://instances-api.zesty.org/#026123c3-086e-42bd-9eda-86c2b5de33a2).
 
+### Instance Settings
+
+**Get all instance settings:**
+
+```javascript
+try {
+  const res = await zesty.getSettings()
+} catch(err) {
+  console.log(err)
+}
+```
+
+**Get instance setting by setting ID:**
+
+```javascript
+try {
+  const settingID = 5
+  const res = await zesty.getSetting(settingID)
+} catch(err) {
+  console.log(err)
+}
+```
+
 ## Media Management Calls
 
 ### Media Bins
 
-Get all media bins:
+**Get all media bins:**
 
 ```javascript
 try {
@@ -361,7 +790,7 @@ Abbreviated response format:
 }
 ```       
 
-Get media bin by ID:
+**Get media bin by ID:**
 
 ```javascript
 try {
@@ -390,7 +819,7 @@ Abbreviated response format:
 }
 ```
 
-Update media bin by ID:
+**Update media bin by ID:**
 
 (Allows for bin name to be updated).
 
@@ -424,7 +853,7 @@ Abbreviated response format:
 
 ### Media Groups (Folders)
 
-Get all media groups in a bin:
+**Get all media groups in a bin:**
 
 ```javascript
 const binId = 'media bin ID'
@@ -455,7 +884,7 @@ Abbreviated response format:
 }
 ```
 
-Get media group by ID:
+**Get media group by ID:**
 
 ```javascript
 const groupId = 'media group ID'
@@ -501,7 +930,7 @@ Abbreviated response format:
 }
 ```
 
-Create media group:
+**Create media group:**
 
 ```javascript
 const binId = 'media bin ID'
@@ -538,7 +967,7 @@ Abbreviated response format:
 }
 ```
 
-Update media group by ID:
+**Update media group by ID:**
 
 ```javascript
 const groupId = 'group ID to update'
@@ -575,7 +1004,7 @@ Abbreviated response format:
 }
 ```
 
-Delete media group by ID:
+**Delete media group by ID:**
 
 ```javascript
 const groupId = 'group ID to delete'
@@ -599,7 +1028,7 @@ Abbreviated response format:
 
 ### Media Files
 
-Get all media files in a bin:
+**Get all media files in a bin:**
 
 ```javascript
 const binId = 'media bin ID'
@@ -636,7 +1065,7 @@ Abbreviated response format:
 }
 ```
 
-Get media file by ID:
+**Get media file by ID:**
 
 ```javascript
 const fileId = 'media file ID'
@@ -672,7 +1101,7 @@ Abbreviated response format:
 }
 ```
 
-Create (upload) media file:
+**Create (upload) media file:**
 
 ```javascript
 const fs = require('fs')
@@ -718,7 +1147,7 @@ Abbreviated response format:
 }
 ```
 
-Update media file by ID:
+**Update media file by ID:**
 
 (Allows ability to change file name, display title, group that the file is in).
 
@@ -761,7 +1190,7 @@ Abbreviated response format:
 }
 ```
 
-Delete media file by ID:
+**Delete media file by ID:**
 
 ```javascript
 const fileId = 'media file ID'
