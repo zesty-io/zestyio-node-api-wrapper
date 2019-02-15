@@ -58,8 +58,8 @@ class ZestyioAPIWrapper {
     }
 
     this.sitesServiceEndpoints = {
-      schedulePublishPOST: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule',
-      scheduleUnpublishPATCH: '/INSTANCE_ZUID/content/items/ITEM_ZUID/publish-schedule/PUBLISHING_ZUID'
+      schedulePublishPOST: '/content/items/ITEM_ZUID/publish-schedule',
+      scheduleUnpublishPATCH: '/content/items/ITEM_ZUID/publish-schedule/PUBLISHING_ZUID'
     }
   
     this.mediaAPIEndpoints = {
@@ -246,7 +246,7 @@ class ZestyioAPIWrapper {
   async publishItemImmediately(itemZuid, versionNumber) {
     const uri = this.buildAPIURL(
       this.replaceInURL(
-        sitesServiceEndpoints.schedulePublishPOST,
+        this.sitesServiceEndpoints.schedulePublishPOST,
         {
           ITEM_ZUID: itemZuid
         }
@@ -261,14 +261,15 @@ class ZestyioAPIWrapper {
     return await this.postRequest({
       uri, 
       payload, 
-      usesXAuthHeader: true
+      usesXAuthHeader: true,
+      successCode: 200
     })
   }
 
   async unpublishItemImmediately(itemZUID, publishingZUID) {
     const uri = this.buildAPIURL(
       this.replaceInURL(
-        sitesServiceEndpoints.scheduleUnpublishPATCH,
+        this.sitesServiceEndpoints.scheduleUnpublishPATCH,
         {
           ITEM_ZUID: itemZUID,
           PUBLISHING_ZUID: publishingZUID
@@ -975,7 +976,7 @@ class ZestyioAPIWrapper {
       request(opts, (error, response, body) => {
         this.logResponse(response)
 
-        if (! error && response.statusCode === successCode) {
+        if (! error && response.statusCode === params.successCode) {
           resolve(body)
         } else {
           this.logError(error)
