@@ -1,4 +1,5 @@
 const request = require('request').defaults({ strictSSL: false })
+const moment = require('moment')
 
 class ZestyioAPIWrapper {
   constructor(instanceZUID, token, options = {}) {
@@ -145,35 +146,41 @@ class ZestyioAPIWrapper {
   }
 
   async getModels() {
-    const modelsURL =  this.buildAPIURL(this.instancesAPIEndpoints.modelsGETAll)
+    const uri =  this.buildAPIURL(this.instancesAPIEndpoints.modelsGETAll)
     
-    return await this.getRequest(modelsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getModel(modelZUID) {
-    const modelURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.modelsGET,
         { MODEL_ZUID: modelZUID }
       )
     )
 
-    return await this.getRequest(modelURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getFields(modelZUID) {
-    const fieldsURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.fieldsGETAll,
         { MODEL_ZUID: modelZUID }
       )
     )
 
-    return await this.getRequest(fieldsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getField(modelZUID, fieldZUID) {
-    const fieldURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.fieldGET,
         {
@@ -183,11 +190,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(fieldURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getItem(modelZUID, itemZUID) {
-    const itemURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGET,
         { 
@@ -197,11 +206,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(itemURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
-  async saveItem(modelZUID, itemZUID, item) {
-    const itemURL = this.buildAPIURL(
+  async saveItem(modelZUID, itemZUID, payload) {
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsPUT,
         {
@@ -211,12 +222,14 @@ class ZestyioAPIWrapper {
       )
     )
 
-    console.log(itemURL)
-    return await this.putRequest(itemURL, item)
+    return await this.putRequest({
+      uri,
+      payload
+    })
   }
 
   async createItem(modelZUID, item) {
-    const itemURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsPOST,
         {
@@ -225,14 +238,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.postRequest(itemURL, item)
+    return await this.postRequest({
+      uri
+    })
   }
-
-  async publishItem(itemZuid, publishSchedule) {
-    // TODO
-    // TODO if no publishSchedule then it is now...
-    // TODO how to deal with what version to go live?
-    const itemPublishURL = this.buildAPIURL(
+ 
+  async publishItemImmediately(itemZuid, versionNumber) {
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         sitesServiceEndpoints.schedulePublishPOST,
         {
@@ -242,14 +254,19 @@ class ZestyioAPIWrapper {
       'sites-service'  
     )
 
-    return await this.postRequest(itemPublishURL, publishSchedule)
+    const payload = {
+      version_num: versionNumber
+    }
+
+    return await this.postRequest({
+      uri, 
+      payload, 
+      usesXAuthHeader: true
+    })
   }
 
-  async unpublishItem(itemZUID, publishingZUID, publishSchedule) {
-    // TODO
-    // TODO if not publishSchedule then it is now...
-
-    const itemUnpublishURL = this.buildAPIURL(
+  async unpublishItemImmediately(itemZUID, publishingZUID) {
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         sitesServiceEndpoints.scheduleUnpublishPATCH,
         {
@@ -260,11 +277,19 @@ class ZestyioAPIWrapper {
       'sites-service'    
     )
 
-    return await this.patchRequest(itemUnpublishURL, publishSchedule)
+    const payload = {
+      take_offline_at: moment.utc().format('YYYY-MM-DD HH:mm:ss')
+    }
+
+    return await this.patchRequest({
+      uri, 
+      payload, 
+      usesXAuthHeader: true
+    })
   }
 
   async getItemPublishings(modelZUID, itemZUID) {
-    const itemPublishingsURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETPublishings,
         {
@@ -274,11 +299,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(itemPublishingsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getItemPublishing(modelZUID, itemZUID, publishingZUID) {
-    const itemPublishingURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETPublishing,
         {
@@ -289,22 +316,26 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(itemPublishingURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getItems(modelZUID) {
-    const itemsURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETAll,
         { MODEL_ZUID: modelZUID }
       )
     )
 
-    return await this.getRequest(itemsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getItemVersions(modelZUID, itemZUID) {
-    const itemVersionsURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETVersions,
         { 
@@ -314,11 +345,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(itemVersionsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getItemVersion(modelZUID, itemZUID, versionNumber) {
-    const itemVersionURL = this.buildAPIURL(
+    const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsGETVersion,
         {
@@ -329,15 +362,21 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(itemVersionURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getViews() {
-    return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsGETAll))
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.viewsGETAll)
+
+    return await this.getRequest({ 
+      uri
+    })
   }
 
   async getView(viewZUID) {
-    const viewGetURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(
         this.replaceInURL(
           this.instancesAPIEndpoints.viewsGET,
@@ -346,11 +385,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(viewGetURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getViewVersions(viewZUID) {
-    const viewGetURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(
         this.replaceInURL(
           this.instancesAPIEndpoints.viewsGETVersions,
@@ -359,11 +400,13 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(viewGetURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getViewVersion(viewZUID, versionNumber) {
-    const viewGetVersionURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(
         this.replaceInURL(
           this.instancesAPIEndpoints.viewsGETVersion,
@@ -375,64 +418,87 @@ class ZestyioAPIWrapper {
       )
     )
 
-    return await this.getRequest(viewGetVersionURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async saveView(viewZUID, payload) {
-    const viewPutURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
       { VIEW_ZUID: viewZUID }
     )
 
-    return await this.putRequest(viewPutURL, payload)
+    return await this.putRequest({
+      uri,
+      payload
+    })
   }
 
   async saveAndPublishView(viewZUID, payload) {
-    const viewPutPublishURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUTPublish),
       { VIEW_ZUID: viewZUID }
     )
 
-    return await this.putRequest(viewPutPublishURL, payload)
+    return await this.putRequest({
+      uri, 
+      payload
+    })
   }
 
   async createView(payload) {
-    return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.viewsPOST), payload)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.viewsPOST)
+
+    return await this.postRequest({
+      uri,
+      payload
+    })
   }
 
   async getScripts() {
-    return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll))
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll)
+
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getScript(scriptZUID) {
-    const scriptURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
       { SCRIPT_ZUID: scriptZUID }
     )
 
-    return await this.getRequest(scriptURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getScript(scriptZUID) {
-    const scriptURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
       { SCRIPT_ZUID: scriptZUID }
     )
 
-    return await this.getRequest(scriptURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getScriptVersions(scriptZUID) {
-    const scriptVersionsURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETVersions),
       { SCRIPT_ZUID: scriptZUID }
     )
 
-    return await this.getRequest(scriptVersionsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getScriptVersion(scriptZUID, versionNumber) {
-    const scriptVersionURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETVersion),
       { 
         SCRIPT_ZUID: scriptZUID,
@@ -440,46 +506,64 @@ class ZestyioAPIWrapper {
       }
     )
 
-    return await this.getRequest(scriptVersionURL)
+    return await this.getRequest({
+      uri
+    })
   }  
 
   async saveScript(scriptZUID, payload) {
-    const scriptPutURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUT),
       { SCRIPT_ZUID: scriptZUID }
     )
 
-    return await this.putRequest(scriptPutURL, payload)
+    return await this.putRequest({
+        uri, 
+        payload
+      }
+    )
   }
 
   async createScript(payload) {
-    return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST), payload)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST)
+
+    return await this.postRequest({
+      uri, 
+      payload
+    })
   }
 
   async getStylesheets() {
-    return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETAll))
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETAll)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getStylesheet(stylesheetZUID) {
-    const stylesheetURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGET),
       { STYLESHEET_ZUID: stylesheetZUID }
     )
 
-    return await this.getRequest(stylesheetURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getStylesheetVersions(stylesheetZUID) {
-    const stylesheetVersionsURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersions),
       { STYLESHEET_ZUID: stylesheetZUID }
     )
 
-    return await this.getRequest(stylesheetVersionsURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getStylesheetVersion(stylesheetZUID, versionNumber) {
-    const stylesheetVersionURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersion),
       { 
         STYLESHEET_ZUID: stylesheetZUID,
@@ -487,123 +571,165 @@ class ZestyioAPIWrapper {
       }
     )
 
-    return await this.getRequest(stylesheetVersionURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async saveStylesheet(stylesheetZUID, payload) {
-    const stylesheetPutURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUT),
       { STYLESHEET_ZUID: stylesheetZUID }
     )
 
-    return await this.putRequest(stylesheetPutURL, payload)
+    return await this.putRequest({
+      uri, 
+      payload
+    })
   }
 
   async createStylesheet(payload) {
-    return await this.postRequest(this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST), payload)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST)
+    return await this.postRequest({
+      uri, 
+      payload
+    })
   }
 
   async getInstance() {
-    const instanceGETURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.accountsAPIEndpoints.instanceGET, 'accounts'),
       { INSTANCE_ZUID: this.instanceZUID }
     )
 
-    return await this.getRequest(instanceGETURL)
+    return await this.getRequest({
+      uri
+    })
   }
   
   async getSiteHead() {
-    const siteHeadGetURL = this.buildAPIURL(this.instancesAPIEndpoints.siteHeadGET)
-    return await this.getRequest(siteHeadGetURL)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.siteHeadGET)
+
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getNav() {
-    const navGetURL = this.buildAPIURL(this.instancesAPIEndpoints.navGET)
-    return await this.getRequest(navGetURL)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.navGET)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async search(searchTerm) {
-    const searchURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.searchGET), 
       { SEARCH_TERM: searchTerm }
     )
 
-    return await this.getRequest(searchURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getInstanceUsers() {
-    const instanceUsersAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.accountsAPIEndpoints.instanceUsersGET, 'accounts'),
       { INSTANCE_ZUID: this.instanceZUID }
     )
 
-    return await this.getRequest(instanceUsersAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getSettings() {
-    return await this.getRequest(this.buildAPIURL(this.instancesAPIEndpoints.settingsGETAll))
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.settingsGETAll)
+
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getSetting(settingsId) {
-    const settingURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.settingsGET),
       { SETTINGS_ID: settingsId }
     )
 
-    return await this.getRequest(settingURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
-  async createHeadTag(tag) {
-    const headTagURL = this.buildAPIURL(this.instancesAPIEndpoints.headTagsPOST)
+  async createHeadTag(payload) {
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.headTagsPOST)
 
-    return await this.postRequest(headTagURL, tag)
+    return await this.postRequest({
+      uri,
+      payload
+    })
   }
 
-  async saveHeadTag(headTagZUID, tag) {
-    const headTagURL = this.replaceInURL(
+  async saveHeadTag(headTagZUID, payload) {
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.headTagsPUT),
       { HEADTAG_ZUID: headTagZUID }
     )
 
-    return await this.putRequest(headTagURL, tag)
+    return await this.putRequest({
+      uri, 
+      payload
+    })
   }
 
   async getHeadTags() {
-    const headTagURL = this.buildAPIURL(this.instancesAPIEndpoints.headTagsGETAll)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.headTagsGETAll)
 
-    return await this.getRequest(headTagURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getHeadTag(headTagZUID) {
-    const headTagURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.headTagsGET),
       { HEADTAG_ZUID: headTagZUID }
     )
 
-    return this.getRequest(headTagURL)
+    return this.getRequest({
+      uri
+    })
   }
 
   async deleteHeadTag(headTagZUID) {
-    const headTagURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.headTagsDELETE),
       { HEADTAG_ZUID: headTagZUID }
     )
 
-    return this.deleteRequest(headTagURL)
+    return this.deleteRequest({
+      uri
+    })
   }
 
   async getAuditTrailEntries() {
-    const auditURL = this.buildAPIURL(this.instancesAPIEndpoints.auditsGETAll)
-    return await this.getRequest(auditURL)
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.auditsGETAll)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getAuditTrailEntry(auditTrailEntryZUID) {
-    const auditURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.auditsGET),
       { AUDIT_ZUID: auditTrailEntryZUID }
     )
 
-    return await this.getRequest(auditURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async searchAuditTrailEntries(searchParams) {
@@ -628,67 +754,79 @@ class ZestyioAPIWrapper {
       requestParams = requestParams.substring(0, requestParams.length -1)
     }
     
-    const auditURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.auditsGETParams),
       { AUDIT_SEARCH_PARAMS: requestParams }
     )
 
-    return await this.getRequest(auditURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   // Media API functions
   async getMediaBins() {
     const siteId = await this.getSiteId()
-    const mediaBinsAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.binsGETAll, 'media'),
       { SITE_ID: siteId }
     )
 
-    return await this.getRequest(mediaBinsAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getMediaBin(mediaBinId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.binsGET, 'media'),
       { BIN_ID: mediaBinId }
     )  
 
-    return await this.getRequest(mediaBinAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
-  // payload: name
   async updateMediaBin(mediaBinId, payload) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.binsPATCH, 'media'),
       { BIN_ID: mediaBinId }
     )  
 
-    return await this.formPatchRequest(mediaBinAPIURL, payload)
+    return await this.formPatchRequest({
+      uri, 
+      payload
+    })
   }
 
   async getMediaFiles(mediaBinId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesGETAll, 'media'),
       { BIN_ID: mediaBinId }
     )      
 
-    return await this.getRequest(mediaBinAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getMediaFile(fileId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesGET, 'media'),
       { FILE_ID: fileId }
     )
 
-    return await this.getRequest(mediaBinAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async createMediaFile(binId, groupId, fileName, title, contentType, stream) {
     let bin = await this.getMediaBin(binId)
     bin = bin.data[0]
 
-    const mediaUploadURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesPOST, 'media'),
       {
         STORAGE_DRIVER: bin.storage_driver,
@@ -696,108 +834,141 @@ class ZestyioAPIWrapper {
       }
     )
 
-    return await this.formPostRequest(mediaUploadURL, {
-      bin_id: binId,
-      group_id: groupId,
-      title: title,
-      file: {
-        value: stream,
-        options: {
-          filename: fileName,
-          contentType: contentType
+    return await this.formPostRequest({
+      uri, 
+      payload: {
+        bin_id: binId,
+        group_id: groupId,
+        title: title,
+        file: {
+          value: stream,
+          options: {
+            filename: fileName,
+            contentType: contentType
+          }
         }
+        // NOTE: user_id - seems to be optional, didn't add it because
+        // it adds another API call overhead for no benefit?
       }
-      // NOTE: user_id - seems to be optional, didn't add it because
-      // it adds another API call overhead for no benefit?
     })
   }
 
   // payload: filename, title, group_id
   async updateMediaFile(fileId, payload) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesPATCH, 'media'),
       { FILE_ID: fileId }
     )
 
-    return await this.formPatchRequest(mediaBinAPIURL, payload)
+    return await this.formPatchRequest({
+      uri,
+      payload
+    })
   }
 
   async deleteMediaFile(fileId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.filesDELETE, 'media'),
       { FILE_ID: fileId }
     )
 
-    return await this.deleteRequest(mediaBinAPIURL)
+    return await this.deleteRequest({
+      uri
+    })
   }
 
   async getMediaGroups(mediaBinId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsGETAll, 'media'),
       { BIN_ID: mediaBinId }
     )      
 
-    return await this.getRequest(mediaBinAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   async getMediaGroup(groupId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsGET, 'media'),
       { GROUP_ID: groupId }
     )      
 
-    return await this.getRequest(mediaBinAPIURL)
+    return await this.getRequest({
+      uri
+    })
   }
 
   // payload: bin_id, group_id, name
   async createMediaGroup(payload) {
-    const mediaBinAPIURL = this.buildAPIURL(this.mediaAPIEndpoints.groupsPOST, 'media')
+    const uri = this.buildAPIURL(this.mediaAPIEndpoints.groupsPOST, 'media')
 
-    return await this.formPostRequest(
-      mediaBinAPIURL, 
+    return await this.formPostRequest({
+      uri, 
       payload
-    )
+    })
   }
 
   // payload: group_id, name
   async updateMediaGroup(groupId, payload) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsPATCH, 'media'),
       { GROUP_ID: groupId }
     )
 
-    return await this.formPatchRequest(
-      mediaBinAPIURL,
+    return await this.formPatchRequest({
+      uri,
       payload
-    )
+    })
   }
 
   async deleteMediaGroup(groupId) {
-    const mediaBinAPIURL = this.replaceInURL(
+    const uri = this.replaceInURL(
       this.buildAPIURL(this.mediaAPIEndpoints.groupsDELETE, 'media'),
       { GROUP_ID: groupId }
     )
 
-    return await this.deleteRequest(mediaBinAPIURL)
+    return await this.deleteRequest({
+      uri
+    })
   }
 
-  async makeRequest(method, uri, successCode, payload, isFormPayload = false) {
+  // params:
+  // { method: 'GET', 
+  //   uri: 'https://...', 
+  //   successCode: 200, 
+  //   payload: { ... }, 
+  //   isFormPayload: false, 
+  //   usesXAuthHeader: false
+  // }
+  async makeRequest(params) {
     const $this = this
+
     return new Promise((resolve, reject) => {
       const opts = {
-        method,
-        uri,
+        method: params.method,
+        uri: params.uri,
         json: true,
         auth: {
           bearer: $this.token
         }
       }
 
-      if (payload) {
-        if (isFormPayload) {
-          opts.formData = payload
+      if (params.usesXAuthHeader) {
+        opts.headers = {
+          'X-Auth': $this.token
+        }
+      } else {
+        opts.auth = {
+          bearer: $this.token
+        }
+      }
+
+      if (params.payload) {
+        if (params.isFormPayload) {
+          opts.formData = params.payload
         } else {
-          opts.body = payload
+          opts.body = params.payload
         }
       }
 
@@ -818,32 +989,83 @@ class ZestyioAPIWrapper {
     })
   }
 
-  async getRequest(url, successResult = 200) {
-    return this.makeRequest('GET', url, successResult)
+  async getRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 200
+    }
+
+    return this.makeRequest({
+      method: 'GET', 
+      ...params
+    })
   }
 
-  async deleteRequest(url, successResult = 200) {
-    return this.makeRequest('DELETE', url, successResult)
+  async deleteRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 200
+    }
+
+    return this.makeRequest({
+      method: 'DELETE',
+      ...params
+    })
   }  
 
-  async putRequest(url, payload, successResult = 200) {
-    return this.makeRequest('PUT', url, successResult, payload)
+  async putRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 200
+    }
+
+    return this.makeRequest({
+      method: 'PUT',
+      ...params
+    })
   }
 
-  async postRequest(url, payload, successResult = 201) {
-    return this.makeRequest('POST', url, successResult, payload)
+  async postRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 201
+    }
+
+    return this.makeRequest({
+      method: 'POST',
+      ...params
+    })
   }
 
-  async patchRequest(url, payload, successResult = 200) {
-    return this.makeRequest('PATCH', url, successResult, payload)
+  async patchRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 200
+    }
+
+    return this.makeRequest({
+      method: 'PATCH',
+      ...params
+    })
   }
 
-  async formPostRequest(url, payload, successResult = 201) {
-    return this.makeRequest('POST', url, successResult, payload, true)
+  async formPostRequest(params) {
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 201
+    }
+
+    return this.makeRequest({
+      method: 'POST',
+      isFormPayload: true,
+      ...params
+    })
   }
 
   async formPatchRequest(url, payload, successResult = 200) {
-    return this.makeRequest('PATCH', url, successResult, payload, true)
+    if (! params.hasOwnProperty('successCode')) {
+      params.successCode = 200
+    }
+
+    return this.makeRequest({
+      method: 'PATCH', 
+      isFormPayload: true,
+      ...params
+    })
   }
 }
 
