@@ -204,7 +204,6 @@ class ZestyioAPIWrapper {
       )
     )
 
-    console.log(itemURL)
     return await this.putRequest(itemURL, item)
   }
 
