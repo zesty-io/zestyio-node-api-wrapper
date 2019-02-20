@@ -135,6 +135,53 @@ class ZestyioAPIWrapper {
     return url
   }
 
+  sitesServiceResponseFormatter(response) {
+    // TODO reformat sites-service responses to look like instances-api responses...
+    // Item deleted response success: { message: 'Item deleted' }
+
+    // Item published response success: 
+    // {
+    //   message: 'Published',
+    //   data: {
+    //     item_zuid: '7-...',
+    //     version_zuid: '9-...',
+    //     version_num: '1'
+    //   }
+    // }
+
+    // Item unpublished response success:
+    // {
+    //   message: 'Entry updated'
+    // }
+
+    // Framework for "standard" success response:
+    /*
+    {
+      _meta: {
+        timestamp: "2019-02-20T20:08:54.945905235Z",
+        totalResults: 1,
+        start: 0,
+        offset: 0,
+        limit: 1,
+      },
+        data: { }
+      }
+    }
+    */
+
+    return ((! response) ? response : {
+      _meta: {
+        timestamp: moment.utc().toISOString(),
+        totalResults: 1,
+        start: 0,
+        offset: 0,
+        limit: 1
+      },
+      message: response.message || {},
+      data: response.data || {}
+    })
+  }
+
   async getSiteId() {
     if (this.siteId) {
       return this.siteId;
@@ -244,12 +291,16 @@ class ZestyioAPIWrapper {
     })
   }
  
-  async publishItemImmediately(itemZuid, versionNumber) {
+  async publishItemImmediately(modelZUID, itemZUID, versionNumber) {
+    // modelZUID is not required yet, but will be when we move from
+    // sites-service to instances-api for this endpoint.  At this 
+    // point versionNumber will no longer be required.
+
     const uri = this.buildAPIURL(
       this.replaceInURL(
         this.sitesServiceEndpoints.schedulePublishPOST,
         {
-          ITEM_ZUID: itemZuid
+          ITEM_ZUID: itemZUID
         }
       ),
       'sites-service'  
@@ -263,11 +314,16 @@ class ZestyioAPIWrapper {
       uri, 
       payload, 
       usesXAuthHeader: true,
-      successCode: 200
+      successCode: 200,
+      responseFormatter: this.sitesServiceResponseFormatter
     })
   }
 
-  async unpublishItemImmediately(itemZUID, publishingZUID) {
+  async unpublishItemImmediately(modelZUID, itemZUID, publishingZUID) {
+    // modelZUID is not required yet, but will be when we move from
+    // sites-service to instances-api for this endpoint.  At this point
+    // publishingZUID will no longer be required.
+
     const uri = this.buildAPIURL(
       this.replaceInURL(
         this.sitesServiceEndpoints.scheduleUnpublishPATCH,
@@ -286,7 +342,8 @@ class ZestyioAPIWrapper {
     return await this.patchRequest({
       uri, 
       payload, 
-      usesXAuthHeader: true
+      usesXAuthHeader: true,
+      responseFormatter: this.sitesServiceResponseFormatter
     })
   }
 
@@ -383,7 +440,8 @@ class ZestyioAPIWrapper {
 
     return await this.deleteRequest({
       uri,
-      usesXAuthHeader: true
+      usesXAuthHeader: true,
+      responseFormatter: this.sitesServiceResponseFormatter
     })
   }
 
@@ -959,7 +1017,8 @@ class ZestyioAPIWrapper {
   //   successCode: 200, 
   //   payload: { ... }, 
   //   isFormPayload: false, 
-  //   usesXAuthHeader: false
+  //   usesXAuthHeader: false,
+  //   responseFormatter: <name of function to format response prior to returning it>
   // }
   async makeRequest(params) {
     const $this = this
@@ -996,7 +1055,7 @@ class ZestyioAPIWrapper {
         this.logResponse(response)
 
         if (! error && response.statusCode === params.successCode) {
-          resolve(body)
+          resolve(params.responseFormatter ? params.responseFormatter(body) : body)
         } else {
           this.logError(error)
           reject({

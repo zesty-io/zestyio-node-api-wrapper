@@ -290,15 +290,32 @@ try {
 }
 ```
 
+Example response:
+
+```javascript
+{ _meta:
+   { timestamp: '2019-02-20T23:25:37.556Z',
+     totalResults: 1,
+     start: 0,
+     offset: 0,
+     limit: 1 },
+  message: 'Item deleted',
+  data: {} 
+}
+```
+
+> **Note:** this response format may change in future.
+
 ### Item Publishing and Unpublishing
 
 **Publish a version of an item immediately:**
 
 ```javascript
 try {
+  const modelZUID = '6-...'
   const itemZUID = '7-...'
   const versionNumber = 1
-  const res = await zesty.publishItemImmediately(itemZUID, versionNumber)
+  const res = await zesty.publishItemImmediately(modelZUID, itemZUID, versionNumber)
 } catch (err) {
   console.log(err)
 }
@@ -307,23 +324,33 @@ try {
 The expected response looks like this:
 
 ```javascript
-{
+{ 
+  _meta: { 
+    timestamp: '2019-02-20T23:28:25.487Z',
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
+  },
   message: 'Published',
-  data: {
+  data: { 
     item_zuid: '7-...',
     version_zuid: '9-...',
-    version_num: '1'
-  }
+    version_num: '1' 
+  } 
 }
 ```
+
+> **Note:** this response format may change in future.
 
 **Unpublish a published item immediately:**
 
 ```javascript
 try {
+  const modelZUID = '6-...'
   const itemZUID = '7-...'
-  const publishingZUID = '18-...' // TODO where does this come from...
-  const res = await zesty.unpublishItemImmediately(itemZUID, publishingZUID)
+  const publishingZUID = '18-...'
+  const res = await zesty.unpublishItemImmediately(modelZUID, itemZUID, publishingZUID)
 } catch (err) {
   console.log(err)
 }
@@ -332,10 +359,20 @@ try {
 The expected response looks like this:
 
 ```javascript
-{
-  message: 'Entry updated'
+{ 
+  _meta: { 
+    timestamp: '2019-02-20T23:46:14.423Z',
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
+  },
+  message: 'Entry updated',
+  data: {} 
 }
 ```
+
+> **Note:** this response format may change in future.
 
 **Get all publishing records for a specific content item by ZUID:**
 
