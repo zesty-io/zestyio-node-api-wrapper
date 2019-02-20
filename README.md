@@ -20,11 +20,42 @@ const Zesty = require('zestyio-api-wrapper')
 
 ## Instantiation
 
-You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager.  Go to the "Editor" section, and click on the "External Editing" button to display the values for your Zesty.io instance.
+You can get the Zesty.io token and instance ZUID for your instance from the Zesty.io manager, or by using the authentication functionality in the wrapper.  At this time, authentication through the wrapper does not support user accounts using 2FA authentication.
+
+### Authenticating using the Wrapper
+
+This wrapper now includes functionality to authenticate a user by their email address and password, returning a token that can then be used to make API calls.  This should be used, for example, when building a tool that runs periodically and authenticates to Zesty.io in order to perform some task such as uploading content or retrieving audit log information.
+
+We do not recommend that you put values for email address and password in your code - treat these as secrets and use environment variables or some other mechanism to ensure that their values aren't stored in the code.  
+
+In the following example, we're assuming the use of environment variables:
 
 ```javascript
-const token = 'PRIVATE_TOKEN_FROM_ZESTYIO' // Keep in env file not in code
-const instanceZUID = '8-b0a6c2b192-xkgt38' // ZUID of the Zesty.io Cloud Content Instance on which to make requests
+try {
+  const email = process.env.ZESTY_USER_EMAIL
+  const password = process.env.ZESTY_USER_PASSWORD
+
+  const zestyAuth = new ZestyAuth()
+
+  const token = await zestyAuth.login(email, password)
+} catch (e) {
+  console.log(e)
+}
+```
+
+If the correct credentials are configured in the environment variables `ZESTY_USER_EMAIL` and `ZESTY_USER_PASSWORD`, the above snipped will log the user in and return a token that can then be used to instantiate the API wrapper.
+
+### Obtaining a Token Manually from the Zesty Editor
+
+You can also obtain a token manually by logging into your Zesty.io instance, then going to the "Editor" section in the manager application.  From there, click on the "External Editing" button which displays the ZUID and token for your instance.
+
+### Instantiating the Wrapper
+
+Once you have obtained a token, you can instantiate the API wrapper as follows:
+
+```javascript
+const token = 'PRIVATE_TOKEN_FROM_ZESTYIO' // Obtain using one of the methods described above
+const instanceZUID = '8-...' // ZUID of the Zesty.io Cloud Content Instance on which to make requests
 
 const zesty = new Zesty(instanceZUID, token)
 ```
@@ -41,6 +72,26 @@ const zesty = new Zesty(
   }
 )
 ```
+
+Note that the user whose login generated the token will need to have permissions to access the particular Zesty.io instance that the wrapper is instantiated with.
+
+### Validating a Token
+
+Tokens are currently session tokens.  This means that they will expire after a period of inactivity.  To check whether a token is valid you can use the `verifyToken` method in the auth class:
+
+```javascript
+try {
+  const zestyAuth = new ZestyAuth()
+
+  // token has been obtained from zestyAuth.login...
+
+  const isTokenGood = await zestyAuth.verifyToken(token)
+} catch (e) {
+  console.log(e)
+}
+```
+
+If this returns `true`, your token is good to make API calls.  If `false`, you should re-authenticate and get a new token.
 
 ## Usage
 
