@@ -117,7 +117,7 @@ The content of `data` will be either an object (for endpoints that return one it
 
 Responses for error cases will generally be delivered as objects having the following form:
 
-```
+```javascript
 { reason: 'Textual description', 
   statusCode: 401, // HTTP response code from API, 400, 401, 500 etc
   error: // null or string or object with error detail
