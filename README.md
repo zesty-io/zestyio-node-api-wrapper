@@ -227,6 +227,18 @@ try {
 }
 ```
 
+**Delete a content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = awayt zesty.deleteItem(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Item Publishing and Unpublishing
 
 **Publish a version of an item immediately:**

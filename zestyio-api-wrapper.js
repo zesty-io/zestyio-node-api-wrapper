@@ -59,7 +59,8 @@ class ZestyioAPIWrapper {
 
     this.sitesServiceEndpoints = {
       schedulePublishPOST: '/content/items/ITEM_ZUID/publish-schedule',
-      scheduleUnpublishPATCH: '/content/items/ITEM_ZUID/publish-schedule/PUBLISHING_ZUID'
+      scheduleUnpublishPATCH: '/content/items/ITEM_ZUID/publish-schedule/PUBLISHING_ZUID',
+      itemsDELETE: '/content/sets/MODEL_ZUID/items/ITEM_ZUID'
     }
   
     this.mediaAPIEndpoints = {
@@ -365,6 +366,24 @@ class ZestyioAPIWrapper {
 
     return await this.getRequest({
       uri
+    })
+  }
+
+  async deleteItem(modelZUID, itemZUID) {
+    const uri = this.buildAPIURL(
+      this.replaceInURL(
+        this.sitesServiceEndpoints.itemsDELETE,
+        {
+          MODEL_ZUID: modelZUID,
+          ITEM_ZUID: itemZUID
+        }
+      ),
+      'sites-service'    
+    )
+
+    return await this.deleteRequest({
+      uri,
+      usesXAuthHeader: true
     })
   }
 
