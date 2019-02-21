@@ -99,7 +99,7 @@ If this returns `true`, your token is good to make API calls.  If `false`, you s
 
 Responses from the API will generally be delivered as objects having the following form:
 
-```
+```javascript
 { 
   _meta: { 
     timestamp: '2019-02-14T18:42:19.279094718Z',
