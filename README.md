@@ -1267,7 +1267,7 @@ const fs = require('fs')
 const fileName = 'test.jpg'
 const stream = fs.createReadStream(`/path/to/${fileName}`)
 const fileType = 'image/jpeg'
-const title= = 'A Media Item'
+const title = 'A Media Item'
 const binId = 'media bin ID'
 const groupId = 'media group ID, use bin ID for root folder in bin'
 
