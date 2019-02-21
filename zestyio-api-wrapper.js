@@ -136,39 +136,6 @@ class ZestyioAPIWrapper {
   }
 
   sitesServiceResponseFormatter(response) {
-    // TODO reformat sites-service responses to look like instances-api responses...
-    // Item deleted response success: { message: 'Item deleted' }
-
-    // Item published response success: 
-    // {
-    //   message: 'Published',
-    //   data: {
-    //     item_zuid: '7-...',
-    //     version_zuid: '9-...',
-    //     version_num: '1'
-    //   }
-    // }
-
-    // Item unpublished response success:
-    // {
-    //   message: 'Entry updated'
-    // }
-
-    // Framework for "standard" success response:
-    /*
-    {
-      _meta: {
-        timestamp: "2019-02-20T20:08:54.945905235Z",
-        totalResults: 1,
-        start: 0,
-        offset: 0,
-        limit: 1,
-      },
-        data: { }
-      }
-    }
-    */
-
     return ((! response) ? response : {
       _meta: {
         timestamp: moment.utc().toISOString(),
@@ -276,7 +243,7 @@ class ZestyioAPIWrapper {
     })
   }
 
-  async createItem(modelZUID, item) {
+  async createItem(modelZUID, payload) {
     const uri = this.buildAPIURL(
       this.replaceInURL(
         this.instancesAPIEndpoints.itemsPOST,
@@ -287,7 +254,8 @@ class ZestyioAPIWrapper {
     )
 
     return await this.postRequest({
-      uri
+      uri,
+      payload
     })
   }
  
@@ -1135,7 +1103,7 @@ class ZestyioAPIWrapper {
     })
   }
 
-  async formPatchRequest(url, payload, successResult = 200) {
+  async formPatchRequest(params) {
     if (! params.hasOwnProperty('successCode')) {
       params.successCode = 200
     }
