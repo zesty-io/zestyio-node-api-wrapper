@@ -103,10 +103,10 @@ Responses from the API will generally be delivered as objects having the followi
 { 
   _meta: { 
     timestamp: '2019-02-14T18:42:19.279094718Z',
-    otalResults: 1,
-    tart: 0,
-    ffset: 0,
-    imit: 1 
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
   },
   data: // Object or array of objects.
 }
