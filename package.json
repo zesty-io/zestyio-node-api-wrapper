@@ -18,6 +18,7 @@
   "repository": "https://github.com/zesty-io/zestyio-node-api-wrapper",
   "license": "GNU",
   "dependencies": {
+    "moment": "^2.24.0",
     "request": "^2.73.0"
   }
 }

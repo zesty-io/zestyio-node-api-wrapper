@@ -97,20 +97,35 @@ If this returns `true`, your token is good to make API calls.  If `false`, you s
 
 ### Response Object Format
 
-Responses from the API will generally be delivered as objects which have the following form:
+Responses from the API will generally be delivered as objects having the following form:
 
-```
-{ _meta:
-   { timestamp: '2019-02-14T18:42:19.279094718Z',
-     totalResults: 1,
-     start: 0,
-     offset: 0,
-     limit: 1 },
+```javascript
+{ 
+  _meta: { 
+    timestamp: '2019-02-14T18:42:19.279094718Z',
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
+  },
   data: // Object or array of objects.
 }
 ```
 
 The content of `data` will be either an object (for endpoints that return one item) or an array containing zero or more objects (endpoints that can return multiple items will return an array regardless of how many items match the query).
+
+
+### Error Response Format
+
+Responses for error cases will generally be delivered as objects having the following form:
+
+```javascript
+{ 
+  reason: 'Textual description', 
+  statusCode: 401, // HTTP response code from API, 400, 401, 500 etc
+  error: 'Something is wrong' // null or string or object with error detail
+}
+```
 
 ### Content Models and Fields
 
@@ -265,6 +280,102 @@ try {
   console.log(err)
 }
 ```
+
+**Delete a content item by ZUID:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const res = awayt zesty.deleteItem(modelZUID, itemZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+Example response:
+
+```javascript
+{ _meta:
+   { timestamp: '2019-02-20T23:25:37.556Z',
+     totalResults: 1,
+     start: 0,
+     offset: 0,
+     limit: 1 },
+  message: 'Item deleted',
+  data: {} 
+}
+```
+
+> **Note:** this response format may change in future.
+
+### Item Publishing and Unpublishing
+
+**Publish a version of an item immediately:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const versionNumber = 1
+  const res = await zesty.publishItemImmediately(modelZUID, itemZUID, versionNumber)
+} catch (err) {
+  console.log(err)
+}
+```
+
+The expected response looks like this:
+
+```javascript
+{ 
+  _meta: { 
+    timestamp: '2019-02-20T23:28:25.487Z',
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
+  },
+  message: 'Published',
+  data: { 
+    item_zuid: '7-...',
+    version_zuid: '9-...',
+    version_num: '1' 
+  } 
+}
+```
+
+> **Note:** this response format may change in future.
+
+**Unpublish a published item immediately:**
+
+```javascript
+try {
+  const modelZUID = '6-...'
+  const itemZUID = '7-...'
+  const publishingZUID = '18-...'
+  const res = await zesty.unpublishItemImmediately(modelZUID, itemZUID, publishingZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
+The expected response looks like this:
+
+```javascript
+{ 
+  _meta: { 
+    timestamp: '2019-02-20T23:46:14.423Z',
+    totalResults: 1,
+    start: 0,
+    offset: 0,
+    limit: 1 
+  },
+  message: 'Entry updated',
+  data: {} 
+}
+```
+
+> **Note:** this response format may change in future.
 
 **Get all publishing records for a specific content item by ZUID:**
 
@@ -1159,7 +1270,7 @@ const fs = require('fs')
 const fileName = 'test.jpg'
 const stream = fs.createReadStream(`/path/to/${fileName}`)
 const fileType = 'image/jpeg'
-const title= = 'A Media Item'
+const title = 'A Media Item'
 const binId = 'media bin ID'
 const groupId = 'media group ID, use bin ID for root folder in bin'
 
