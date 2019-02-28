@@ -287,7 +287,7 @@ try {
 try {
   const modelZUID = '6-...'
   const itemZUID = '7-...'
-  const res = awayt zesty.deleteItem(modelZUID, itemZUID)
+  const res = await zesty.deleteItem(modelZUID, itemZUID)
 } catch (err) {
   console.log(err)
 }
