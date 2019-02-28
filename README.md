@@ -24,9 +24,9 @@ You can get the Zesty.io token and instance ZUID for your instance from the Zest
 
 ### Authenticating using the Wrapper
 
-This wrapper now includes functionality to authenticate a user by their email address and password, returning a token that can then be used to make API calls.  This should be used, for example, when building a tool that runs periodically and authenticates to Zesty.io in order to perform some task such as uploading content or retrieving audit log information.
+This wrapper now includes functionality to authenticate a user by their email address and password, returning a token that can then be used to make API calls.  This should be used, for scenarios such as building a tool that runs periodically and authenticates to Zesty.io in order to perform some task: uploading content or retrieving audit log information for example.
 
-We do not recommend that you put values for email address and password in your code - treat these as secrets and use environment variables or some other mechanism to ensure that their values aren't stored in the code.  
+We do not recommend that you put values for email address and password in your code or source control system - treat these as secrets and use environment variables or some other mechanism to ensure that their values aren't stored in the code nor committed to source control.  
 
 In the following example, we're assuming the use of environment variables:
 
@@ -43,7 +43,7 @@ try {
 }
 ```
 
-If the correct credentials are configured in the environment variables `ZESTY_USER_EMAIL` and `ZESTY_USER_PASSWORD`, the above snipped will log the user in and return a token that can then be used to instantiate the API wrapper.
+If the correct credentials are configured in the environment variables `ZESTY_USER_EMAIL` and `ZESTY_USER_PASSWORD`, the above snippet will log the user in and return a token that can then be used to instantiate the API wrapper.
 
 ### Obtaining a Token Manually from the Zesty Editor
 
@@ -73,11 +73,11 @@ const zesty = new Zesty(
 )
 ```
 
-Note that the user whose login generated the token will need to have permissions to access the particular Zesty.io instance that the wrapper is instantiated with.
+Note that the user whose login generated the token will need to have permissions to access the particular Zesty.io instance that the wrapper is instantiated with.  As access to instances is also associated with roles, the user will need to have the appropriate role set in Zesty.io in order to be allowed to perform various API calls.
 
 ### Validating a Token
 
-Tokens are currently session tokens.  This means that they will expire after a period of inactivity.  To check whether a token is valid you can use the `verifyToken` method in the auth class:
+Tokens are currently session based.  This means that they will expire after a period of inactivity.  To check whether a token is valid you can use the `verifyToken` method in the auth class:
 
 ```javascript
 try {
@@ -287,7 +287,7 @@ try {
 try {
   const modelZUID = '6-...'
   const itemZUID = '7-...'
-  const res = awayt zesty.deleteItem(modelZUID, itemZUID)
+  const res = await zesty.deleteItem(modelZUID, itemZUID)
 } catch (err) {
   console.log(err)
 }
@@ -588,6 +588,24 @@ try {
 }
 ```
 
+**Save and publish a script:**
+
+Both saves the updated script and publishes it.
+
+```javascript
+const scriptZUID = '10-...'
+const code = "alert('hello again');"
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveAndPublishScript(scriptZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
 **Get all versions of a script:**
 
 ```javascript
@@ -669,6 +687,24 @@ const payload = {
 
 try {
   const res = await zesty.saveStylesheet(stylesheetZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Save and publish a stylesheet:**
+
+Both saves the updated stylesheet and publishes it.
+
+```javascript
+const stylesheetZUID = '10-...'
+const code = '.anotherClass { background-color: #ff0000; }'
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveAndPublishStylesheet(stylesheetZUID, payload)
 } catch (err) {
   console.log(err)
 }

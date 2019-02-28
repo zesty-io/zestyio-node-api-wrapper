@@ -24,7 +24,7 @@ class ZestyioAPIWrapper {
       viewsGETVersion: '/web/views/VIEW_ZUID/versions/VERSION_NUMBER',
       viewsPOST: '/web/views',
       viewsPUT: '/web/views/VIEW_ZUID',
-      viewsPUTPublish: '/web/views/VIEW_ZUID?publish=true',
+      viewsPUTPublish: '/web/views/VIEW_ZUID?action=publish',
       settingsGETAll: '/env/settings',
       settingsGET: '/env/settings/SETTINGS_ID',
       stylesheetsGETAll: '/web/stylesheets',
@@ -33,12 +33,14 @@ class ZestyioAPIWrapper {
       stylesheetsGETVersion: '/web/stylesheets/STYLESHEET_ZUID/versions/VERSION_NUMBER',
       stylesheetsPOST: '/web/stylesheets',
       stylesheetsPUT: '/web/stylesheets/STYLESHEET_ZUID',
+      stylesheetsPUTPublish: '/web/stylesheets/STYLESHEET_ZUID?action=publish',
       scriptsGETAll: '/web/scripts',
       scriptsGET: '/web/scripts/SCRIPT_ZUID',
       scriptsGETVersions: '/web/scripts/SCRIPT_ZUID/versions',
       scriptsGETVersion: '/web/scripts/SCRIPT_ZUID/versions/VERSION_NUMBER',
       scriptsPOST: '/web/scripts',
       scriptsPUT: '/web/scripts/SCRIPT_ZUID',
+      scriptsPUTPublish: '/web/scripts/SCRIPT_ZUID?action=publish',
       siteHeadGET: '/web/headers',
       navGET: '/env/nav',
       searchGET: '/search/items?q=SEARCH_TERM', // Undocumented
@@ -570,6 +572,18 @@ class ZestyioAPIWrapper {
     )
   }
 
+  async saveAndPublishScript(scriptZUID, payload) {
+    const uri = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUTPublish),
+      { SCRIPT_ZUID: scriptZUID }
+    )
+
+    return await this.putRequest({
+      uri, 
+      payload
+    })
+  }
+
   async createScript(payload) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST)
 
@@ -633,6 +647,18 @@ class ZestyioAPIWrapper {
       payload
     })
   }
+
+  async saveAndPublishStylesheet(stylesheetZUID, payload) {
+    const uri = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUTPublish),
+      { STYLESHEET_ZUID: stylesheetZUID }
+    )
+
+    return await this.putRequest({
+      uri, 
+      payload
+    })
+  }  
 
   async createStylesheet(payload) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST)
