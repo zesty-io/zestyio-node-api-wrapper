@@ -588,6 +588,24 @@ try {
 }
 ```
 
+**Save and publish a script:**
+
+Both saves the updated script and publishes it.
+
+```javascript
+const scriptZUID = '10-...'
+const code = "alert('hello again');"
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveAndPublishScript(scriptZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
 **Get all versions of a script:**
 
 ```javascript
@@ -669,6 +687,24 @@ const payload = {
 
 try {
   const res = await zesty.saveStylesheet(stylesheetZUID, payload)
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Save and publish a stylesheet:**
+
+Both saves the updated stylesheet and publishes it.
+
+```javascript
+const stylesheetZUID = '10-...'
+const code = '.anotherClass { background-color: #ff0000; }'
+const payload = {
+  code: code
+}
+
+try {
+  const res = await zesty.saveAndPublishStylesheet(stylesheetZUID, payload)
 } catch (err) {
   console.log(err)
 }
