@@ -31,6 +31,8 @@ We do not recommend that you put values for email address and password in your c
 In the following example, we're assuming the use of environment variables:
 
 ```javascript
+const ZestyAuth = require('zestyio-api-wrapper/auth')
+
 try {
   const email = process.env.ZESTY_USER_EMAIL
   const password = process.env.ZESTY_USER_PASSWORD
