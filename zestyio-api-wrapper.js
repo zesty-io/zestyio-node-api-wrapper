@@ -18,6 +18,8 @@ class ZestyioAPIWrapper {
       itemsGETVersions: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions',
       itemsGETVersion: '/content/models/MODEL_ZUID/items/ITEM_ZUID/versions/VERSION_NUMBER',
       itemsPUT: '/content/models/MODEL_ZUID/items/ITEM_ZUID',
+      linksGETAll: '/content/links',
+      linksGET: '/content/links/LINK_ZUID',
       viewsGETAll: '/web/views',
       viewsGET: '/web/views/VIEW_ZUID',
       viewsGETVersions: '/web/views/VIEW_ZUID/versions',
@@ -412,6 +414,29 @@ class ZestyioAPIWrapper {
       uri,
       usesXAuthHeader: true,
       responseFormatter: this.sitesServiceResponseFormatter
+    })
+  }
+
+  async getLinks() {
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.linksGETAll)
+
+    return await this.getRequest({
+      uri
+    })
+  }
+
+  async getLink(linkZUID) {
+    const uri = this.buildAPIURL(
+      this.replaceInURL(
+        this.instancesAPIEndpoints.linksGET,
+        {
+          LINK_ZUID: linkZUID
+        }
+      )
+    )
+
+    return await this.getRequest({
+      uri
     })
   }
 
