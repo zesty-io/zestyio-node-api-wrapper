@@ -404,6 +404,29 @@ try {
 }
 ```
 
+**Get all link items:**
+
+Retrieves all link items (link type internal for links to other items within the Zesty.io instance, or external for links to third party web pages).
+
+```javascript
+try {
+  const res = await zesty.getLinks()
+} catch (err) {
+  console.log(err)
+}
+```
+
+**Get specific link item by ZUID:**
+
+```javascript
+try {
+  const linkZUID = '17-...' // Link ZUIDs begin with 17
+  const res = await zeesty.getLink(linkZUID)
+} catch (err) {
+  console.log(err)
+}
+```
+
 ### Views
 
 The wrapper allows CRUD on Zesty.io view files. See documentation [here](https://instances-api.zesty.org/#efc2e79a-e392-4114-a722-c3b512e23833):
