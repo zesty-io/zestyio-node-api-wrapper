@@ -1028,22 +1028,19 @@ class ZestyioAPIWrapper {
       }
 
       request(opts, (error, response, body) => {
-        if (error) {
-          this.logError(error);
-          reject(err)
+        this.logResponse(response);
+
+        if (!error && response.statusCode === params.successCode) {
+          resolve(
+            params.responseFormatter ? params.responseFormatter(body) : body
+          );
         } else {
-          this.logResponse(response);
-          if (response.statusCode === params.successCode) {
-            resolve(
-              params.responseFormatter ? params.responseFormatter(body) : body
-            );
-          } else {
-            reject({
-              reason: $this.defaultAccessError,
-              statusCode: response.statusCode,
-              error: response.body.error
-            });
-          }
+          this.logError(error);
+          reject({
+            reason: $this.defaultAccessError,
+            statusCode: response.statusCode,
+            error
+          });
         }
       });
     });
