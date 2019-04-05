@@ -996,54 +996,69 @@ class ZestyioAPIWrapper {
   //   usesXAuthHeader: false,
   //   responseFormatter: <name of function to format response prior to returning it>
   // }
-  async makeRequest(params) {
+  async makeRequest(params, showError=false) {
     const $this = this;
+    const opts = {
+      method: params.method,
+      uri: params.uri,
+      json: true,
+      auth: {
+        bearer: $this.token
+      }
+    };
 
-    return new Promise((resolve, reject) => {
-      const opts = {
-        method: params.method,
-        uri: params.uri,
-        json: true,
-        auth: {
-          bearer: $this.token
-        }
+    if (params.usesXAuthHeader) {
+      opts.headers = {
+        "X-Auth": $this.token
       };
+    } else {
+      opts.auth = {
+        bearer: $this.token
+      };
+    }
 
-      if (params.usesXAuthHeader) {
-        opts.headers = {
-          "X-Auth": $this.token
-        };
+    if (params.payload) {
+      if (params.isFormPayload) {
+        opts.formData = params.payload;
       } else {
-        opts.auth = {
-          bearer: $this.token
-        };
+        opts.body = params.payload;
       }
+    }
 
-      if (params.payload) {
-        if (params.isFormPayload) {
-          opts.formData = params.payload;
-        } else {
-          opts.body = params.payload;
-        }
-      }
-
-      request(opts, (error, response, body) => {
-        this.logResponse(response);
-
-        if (!error && response.statusCode === params.successCode) {
-          resolve(
-            params.responseFormatter ? params.responseFormatter(body) : body
-          );
-        } else {
-          this.logError(error);
-          reject({
-            reason: $this.defaultAccessError,
-            statusCode: response.statusCode,
-            error
-          });
-        }
+    // weienwong - showError has a default false value for backward compatibility reasons
+    // if we wish to return the contents of an error from the response body, set showError = true
+    if (showError) {
+      return new Promise((resolve, reject) => {
+        request(opts, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve({
+              response, body
+            })
+          }
+        })
+      })
+    } else {
+      return new Promise((resolve, reject) => {
+        request(opts, (error, response, body) => {
+          this.logResponse(response);
+  
+          if (!error && response.statusCode === params.successCode) {
+            resolve(
+              params.responseFormatter ? params.responseFormatter(body) : body
+            );
+          } else {
+            this.logError(error);
+            reject({
+              reason: $this.defaultAccessError,
+              statusCode: response.statusCode,
+              error
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   async getRequest(params) {
