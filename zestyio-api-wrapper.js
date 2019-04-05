@@ -616,7 +616,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async saveStylesheet(stylesheetZUID, payload) {
+  async saveStylesheet(stylesheetZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUT),
       { STYLESHEET_ZUID: stylesheetZUID }
@@ -625,10 +625,10 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }), showErr;
   }
 
-  async saveAndPublishStylesheet(stylesheetZUID, payload) {
+  async saveAndPublishStylesheet(stylesheetZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUTPublish),
       { STYLESHEET_ZUID: stylesheetZUID }
@@ -637,15 +637,15 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async createStylesheet(payload) {
+  async createStylesheet(payload, showErr=false) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST);
     return await this.postRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
   async getInstance() {
@@ -1083,7 +1083,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async putRequest(params) {
+  async putRequest(params, showErr=false) {
     if (!params.hasOwnProperty("successCode")) {
       params.successCode = 200;
     }
@@ -1091,10 +1091,10 @@ class ZestyioAPIWrapper {
     return this.makeRequest({
       method: "PUT",
       ...params
-    });
+    }, showErr);
   }
 
-  async postRequest(params) {
+  async postRequest(params, showErr=false) {
     if (!params.hasOwnProperty("successCode")) {
       params.successCode = 201;
     }
@@ -1102,7 +1102,7 @@ class ZestyioAPIWrapper {
     return this.makeRequest({
       method: "POST",
       ...params
-    });
+    }, s);
   }
 
   async patchRequest(params) {
