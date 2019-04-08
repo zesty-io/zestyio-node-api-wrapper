@@ -624,7 +624,7 @@ class ZestyioAPIWrapper {
 
     return await this.putRequest({
       uri,
-      payload,
+      payload
     }, showErr);
   }
 
