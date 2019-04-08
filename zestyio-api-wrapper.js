@@ -624,8 +624,8 @@ class ZestyioAPIWrapper {
 
     return await this.putRequest({
       uri,
-      payload
-    }), showErr;
+      payload,
+    }, showErr);
   }
 
   async saveAndPublishStylesheet(stylesheetZUID, payload, showErr=false) {
@@ -1033,9 +1033,7 @@ class ZestyioAPIWrapper {
           if (error) {
             reject(error);
           } else {
-            resolve({
-              response, body
-            })
+            resolve(response)
           }
         })
       })
