@@ -1102,7 +1102,7 @@ class ZestyioAPIWrapper {
     return this.makeRequest({
       method: "POST",
       ...params
-    }, s);
+    }, showErr);
   }
 
   async patchRequest(params) {
