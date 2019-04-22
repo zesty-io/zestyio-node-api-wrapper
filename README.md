@@ -676,7 +676,7 @@ const payload = {
 };
 
 try {
-  const res = await zesty.createScript(payload);
+  const res = await zesty.createStylesheet(payload);
 } catch (err) {
   console.log(err);
 }
@@ -696,7 +696,7 @@ const payload = {
 const showError = true;
 
 try {
-  const res = await zesty.createScript(payload, showError);
+  const res = await zesty.createStylesheet(payload, showError);
 } catch (err) {
   console.log(err);
 }
