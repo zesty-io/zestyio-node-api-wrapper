@@ -682,6 +682,26 @@ try {
 }
 ```
 
+**Create a stylesheet and show transpiler errors:**
+
+```javascript
+const fileName = "styles.less";
+const code = ".myClass { text-align: left; }";
+const stylesheetType = "text/less"; // Can also use text/css or text/scss
+const payload = {
+  code: code,
+  fileName: fileName,
+  type: stylesheetType
+};
+const showError = true;
+
+try {
+  const res = await zesty.createScript(payload, showError);
+} catch (err) {
+  console.log(err);
+}
+```
+
 **Save a stylesheet:**
 
 Change the contents of a stylesheet, while retaining the filename and file type.
@@ -696,6 +716,26 @@ const payload = {
 
 try {
   const res = await zesty.saveStylesheet(stylesheetZUID, payload);
+} catch (err) {
+  console.log(err);
+}
+```
+
+**Save a stylesheet and show transpiler errors:**
+
+Change the contents of a stylesheet, while retaining the filename and file type.
+
+```javascript
+const stylesheetZUID = "10-...";
+const code = ".anotherClass { text-align: center; }";
+
+const payload = {
+  code: code
+};
+const showError = true;
+
+try {
+  const res = await zesty.saveStylesheet(stylesheetZUID, payload, showError);
 } catch (err) {
   console.log(err);
 }
@@ -718,6 +758,26 @@ try {
   console.log(err);
 }
 ```
+
+**Save and publish a stylesheet and show transpiler errors:**
+
+Both saves the updated stylesheet and publishes it.
+
+```javascript
+const stylesheetZUID = "10-...";
+const code = ".anotherClass { background-color: #ff0000; }";
+const payload = {
+  code: code
+};
+const showError = true;
+
+try {
+  const res = await zesty.saveAndPublishStylesheet(stylesheetZUID, payload, showError);
+} catch (err) {
+  console.log(err);
+}
+```
+
 
 **Get all versions of a stylesheet:**
 
