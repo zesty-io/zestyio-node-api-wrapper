@@ -616,7 +616,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async saveStylesheet(stylesheetZUID, payload) {
+  async saveStylesheet(stylesheetZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUT),
       { STYLESHEET_ZUID: stylesheetZUID }
@@ -625,10 +625,10 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async saveAndPublishStylesheet(stylesheetZUID, payload) {
+  async saveAndPublishStylesheet(stylesheetZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPUTPublish),
       { STYLESHEET_ZUID: stylesheetZUID }
@@ -637,15 +637,15 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async createStylesheet(payload) {
+  async createStylesheet(payload, showErr=false) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsPOST);
     return await this.postRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
   async getInstance() {
@@ -996,54 +996,67 @@ class ZestyioAPIWrapper {
   //   usesXAuthHeader: false,
   //   responseFormatter: <name of function to format response prior to returning it>
   // }
-  async makeRequest(params) {
+  async makeRequest(params, showError=false) {
     const $this = this;
+    const opts = {
+      method: params.method,
+      uri: params.uri,
+      json: true,
+      auth: {
+        bearer: $this.token
+      }
+    };
 
-    return new Promise((resolve, reject) => {
-      const opts = {
-        method: params.method,
-        uri: params.uri,
-        json: true,
-        auth: {
-          bearer: $this.token
-        }
+    if (params.usesXAuthHeader) {
+      opts.headers = {
+        "X-Auth": $this.token
       };
+    } else {
+      opts.auth = {
+        bearer: $this.token
+      };
+    }
 
-      if (params.usesXAuthHeader) {
-        opts.headers = {
-          "X-Auth": $this.token
-        };
+    if (params.payload) {
+      if (params.isFormPayload) {
+        opts.formData = params.payload;
       } else {
-        opts.auth = {
-          bearer: $this.token
-        };
+        opts.body = params.payload;
       }
+    }
 
-      if (params.payload) {
-        if (params.isFormPayload) {
-          opts.formData = params.payload;
-        } else {
-          opts.body = params.payload;
-        }
-      }
-
-      request(opts, (error, response, body) => {
-        this.logResponse(response);
-
-        if (!error && response.statusCode === params.successCode) {
-          resolve(
-            params.responseFormatter ? params.responseFormatter(body) : body
-          );
-        } else {
-          this.logError(error);
-          reject({
-            reason: $this.defaultAccessError,
-            statusCode: response.statusCode,
-            error
-          });
-        }
+    // weienwong - showError has a default false value for backward compatibility reasons
+    // if we wish to return the contents of an error from the response body, set showError = true
+    if (showError) {
+      return new Promise((resolve, reject) => {
+        request(opts, (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response)
+          }
+        })
+      })
+    } else {
+      return new Promise((resolve, reject) => {
+        request(opts, (error, response, body) => {
+          this.logResponse(response);
+  
+          if (!error && response.statusCode === params.successCode) {
+            resolve(
+              params.responseFormatter ? params.responseFormatter(body) : body
+            );
+          } else {
+            this.logError(error);
+            reject({
+              reason: $this.defaultAccessError,
+              statusCode: response.statusCode,
+              error
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   async getRequest(params) {
@@ -1068,7 +1081,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async putRequest(params) {
+  async putRequest(params, showErr=false) {
     if (!params.hasOwnProperty("successCode")) {
       params.successCode = 200;
     }
@@ -1076,10 +1089,10 @@ class ZestyioAPIWrapper {
     return this.makeRequest({
       method: "PUT",
       ...params
-    });
+    }, showErr);
   }
 
-  async postRequest(params) {
+  async postRequest(params, showErr=false) {
     if (!params.hasOwnProperty("successCode")) {
       params.successCode = 201;
     }
@@ -1087,7 +1100,7 @@ class ZestyioAPIWrapper {
     return this.makeRequest({
       method: "POST",
       ...params
-    });
+    }, showErr);
   }
 
   async patchRequest(params) {
