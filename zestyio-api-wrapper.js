@@ -690,7 +690,7 @@ async getScripts() {
   async getUser(userZUID) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.accountsAPIEndpoints.userGET, "accounts"),
-      { USER_ZUID: this.userZUID }
+      { USER_ZUID: userZUID }
     );
 
     return await this.getRequest({
