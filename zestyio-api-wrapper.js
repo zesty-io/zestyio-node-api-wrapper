@@ -60,7 +60,9 @@ class ZestyioAPIWrapper {
 
     this.accountsAPIEndpoints = {
       instanceGET: "/instances/INSTANCE_ZUID",
-      instanceUsersGET: "/instances/INSTANCE_ZUID/users/roles"
+      instanceUsersGET: "/instances/INSTANCE_ZUID/users/roles",
+      userGET: "/users/USER_ZUID",
+      instanceGETAll: "/instances",
     };
 
     this.sitesServiceEndpoints = {
@@ -652,6 +654,43 @@ class ZestyioAPIWrapper {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.accountsAPIEndpoints.instanceGET, "accounts"),
       { INSTANCE_ZUID: this.instanceZUID }
+    );
+
+    return await this.getRequest({
+      uri
+    });
+  }
+
+  async getInstances() {
+    const uri = this.buildAPIURL(this.accountsAPIEndpoints.instanceGETAll, "accounts");
+    return await this.getRequest({
+      uri
+    });
+  }
+
+async getScripts() {
+    const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll);
+
+    return await this.getRequest({
+      uri
+    });
+  }
+ async getStylesheetVersions(stylesheetZUID) {
+    const uri = this.replaceInURL(
+      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersions),
+      { STYLESHEET_ZUID: stylesheetZUID }
+    );
+
+    return await this.getRequest({
+      uri
+    });
+  }
+
+
+  async getUser(userZUID) {
+    const uri = this.replaceInURL(
+      this.buildAPIURL(this.accountsAPIEndpoints.userGET, "accounts"),
+      { USER_ZUID: userZUID }
     );
 
     return await this.getRequest({
