@@ -244,7 +244,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async saveItem(modelZUID, itemZUID, payload) {
+  async saveItem(modelZUID, itemZUID, payload, showErr=false) {
     const uri = this.buildAPIURL(
       this.replaceInURL(this.instancesAPIEndpoints.itemsPUT, {
         MODEL_ZUID: modelZUID,
@@ -255,10 +255,10 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async createItem(modelZUID, payload) {
+  async createItem(modelZUID, payload, showErr=false) {
     const uri = this.buildAPIURL(
       this.replaceInURL(this.instancesAPIEndpoints.itemsPOST, {
         MODEL_ZUID: modelZUID
@@ -268,7 +268,7 @@ class ZestyioAPIWrapper {
     return await this.postRequest({
       uri,
       payload
-    });
+    },showErr);
   }
 
   async publishItemImmediately(modelZUID, itemZUID, versionNumber) {
@@ -454,7 +454,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async saveView(viewZUID, payload) {
+  async saveView(viewZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUT),
       { VIEW_ZUID: viewZUID }
@@ -463,10 +463,10 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    },showErr);
   }
 
-  async saveAndPublishView(viewZUID, payload) {
+  async saveAndPublishView(viewZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.viewsPUTPublish),
       { VIEW_ZUID: viewZUID }
@@ -475,31 +475,20 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    },showErr);
   }
 
-  async createView(payload) {
+  async createView(payload, showErr=false) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.viewsPOST);
 
     return await this.postRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
   async getScripts() {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll);
-
-    return await this.getRequest({
-      uri
-    });
-  }
-
-  async getScript(scriptZUID) {
-    const uri = this.replaceInURL(
-      this.buildAPIURL(this.instancesAPIEndpoints.scriptsGET),
-      { SCRIPT_ZUID: scriptZUID }
-    );
 
     return await this.getRequest({
       uri
@@ -542,7 +531,7 @@ class ZestyioAPIWrapper {
     });
   }
 
-  async saveScript(scriptZUID, payload) {
+  async saveScript(scriptZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUT),
       { SCRIPT_ZUID: scriptZUID }
@@ -551,10 +540,10 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async saveAndPublishScript(scriptZUID, payload) {
+  async saveAndPublishScript(scriptZUID, payload, showErr=false) {
     const uri = this.replaceInURL(
       this.buildAPIURL(this.instancesAPIEndpoints.scriptsPUTPublish),
       { SCRIPT_ZUID: scriptZUID }
@@ -563,16 +552,16 @@ class ZestyioAPIWrapper {
     return await this.putRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
-  async createScript(payload) {
+  async createScript(payload, showErr=false) {
     const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsPOST);
 
     return await this.postRequest({
       uri,
       payload
-    });
+    }, showErr);
   }
 
   async getStylesheets() {
@@ -667,25 +656,6 @@ class ZestyioAPIWrapper {
       uri
     });
   }
-
-async getScripts() {
-    const uri = this.buildAPIURL(this.instancesAPIEndpoints.scriptsGETAll);
-
-    return await this.getRequest({
-      uri
-    });
-  }
- async getStylesheetVersions(stylesheetZUID) {
-    const uri = this.replaceInURL(
-      this.buildAPIURL(this.instancesAPIEndpoints.stylesheetsGETVersions),
-      { STYLESHEET_ZUID: stylesheetZUID }
-    );
-
-    return await this.getRequest({
-      uri
-    });
-  }
-
 
   async getUser(userZUID) {
     const uri = this.replaceInURL(
