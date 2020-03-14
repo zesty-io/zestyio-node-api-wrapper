@@ -1,10 +1,10 @@
 # Zesty.io Node API Wrapper
 
-Deprecation Notice
------------- 
-Deprecation Notice: Updates to the zesty node api wrapperpackage will remain available through NPM with a warning.
-Please migrate your scripts and services the Zesty.io Node SDK https://www.npmjs.com/package/@zesty-io/sdk 
-Thank you, Reach out to support at zesty dot io with any questions.
+| Deprecation Notice |
+| ------------ |
+| Deprecation Notice: Updates to the zesty node api wrapperpackage will remain available through NPM with a warning. |
+| Please migrate your scripts and services the Zesty.io Node SDK https://www.npmjs.com/package/@zesty-io/sdk |
+| Thank you, Reach out to support at zesty dot io with any questions. |
 
 
 Quickly access Zesty.io's Instance, Accounts and Media Management APIs.
