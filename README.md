@@ -1,13 +1,12 @@
 # Zesty.io Node API Wrapper
 
-```
-!Deprecation Notice: Updates to the zesty node api wrapper package will continue up until June 1st, 2021. There after the package will remain available through NPM with a warning. 
+<div style="color: red; font-weight: bold; padding; 10px">
+Deprecation Notice: Updates to the zesty node api wrapper package will continue up until June 1st, 2021. There after the package will remain available through NPM with a warning. 
 
 Please migrate your scripts and services the Zesty.io Node SDK https://www.npmjs.com/package/@zesty-io/sdk 
 
 Thank you, Reach out to support at zesty dot io with any questions.
-
-```
+</div>
 
 Quickly access Zesty.io's Instance, Accounts and Media Management APIs.
 
