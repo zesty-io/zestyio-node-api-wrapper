@@ -4,7 +4,7 @@ class ZestyioAuthWrapper {
   constructor(options = {}) {
     this.authURL = options.hasOwnProperty("authURL")
       ? options.authURL
-      : "https://svc.zesty.io/auth";
+      : "https://auth.api.zesty.io";
   }
 
   async login(email, password) {

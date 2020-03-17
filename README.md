@@ -1,5 +1,13 @@
 # Zesty.io Node API Wrapper
 
+| Deprecation Notice - Posted March 14th 2020 |
+| ------------ |
+| **Updates and support to the zesty node api wrapper will continue until June, 1st 2021** |
+| The zesty node api wrapper package will remain available through NPM with a decrecation warning. |
+| **Please migrate your scripts and services the Zesty.io Node SDK** https://www.npmjs.com/package/@zesty-io/sdk |
+| Thank you, Reach out to support at zesty dot io with any questions. |
+
+
 Quickly access Zesty.io's Instance, Accounts and Media Management APIs.
 
 ## Installation
