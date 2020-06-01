@@ -1,4 +1,4 @@
-const request = require("request");
+const request = require("request").defaults({ strictSSL: false });
 
 class ZestyioAuthWrapper {
   constructor(options = {}) {
